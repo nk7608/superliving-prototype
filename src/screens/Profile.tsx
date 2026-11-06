@@ -1,10 +1,11 @@
+import { Avatar } from '../components/Avatar';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ChevronLeft, MoreVertical, Pencil, ShoppingCart, Instagram, Headset, ChevronRight, Award, Wallet, Languages, Star, ShieldAlert, FileText, RotateCcw, BellRing, IdCard } from 'lucide-react';
 import { useAction, useDemo } from '../app/DemoContext';
 import { neha, rohit } from '../data/personas';
 import { Anchor } from '../notes/Anchor';
-import { Face, Sheet, SheetClose } from '../components/ui';
+import { Sheet, SheetClose } from '../components/ui';
 import { PriceSheet } from '../components/PriceSheet';
 import { MeSheet } from '../components/MeSheet';
 import type { DemoState } from '../app/DemoContext';
@@ -50,7 +51,7 @@ export function Profile() {
       </header>
       <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto px-5 pb-10">
         <div className="mt-4 flex items-center gap-4">
-          <Face spec={{ skin: '#E8B892', hair: '#1E1612', style: state.persona === 'rohit' ? 'short' : 'long', shirt: '#4A6E8A', bg: '#FFFFFF' }} className="h-[84px] w-[84px]" rounded />
+          <Avatar who={state.persona} size={84} />
           <div className="flex-1">
             <div className="text-[22px] font-bold text-green-700">{p.name.split(' ')[0]}</div>
             <div className="text-[15px] text-[#9A9A96]">{p.city} · Hinglish</div>

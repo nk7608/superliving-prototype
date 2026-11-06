@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { NotebookPen, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { useDemo } from './DemoContext';
 import { screenByPath } from './screens';
 import { DemoBar, DemoControls } from '../notes/DemoBar';
 import { NotesPanel } from '../notes/NotesPanel';
-import { useKeyboardShortcuts, useTourNav, TourBar as TourBarLazy } from '../notes/TourController';
+import { TourBar, useKeyboardShortcuts } from '../notes/TourController';
 import { noteById, notesForScreen } from '../data/notes';
 import { PHONE } from '../styles/tokens';
 
@@ -42,14 +42,10 @@ function PhoneFrame({ children }: { children: ReactNode }) {
   const [scale, setScale] = useState(1);
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    // Fit the 393×852 frame into whatever space the demo bar and panel leave.
+    // Fit the 393×852 frame into whatever space the bar and panel leave.
     const host = box.current?.parentElement;
     if (!host) return;
-    const fit = () => {
-      const h = host.clientHeight - 32;
-      const w = host.clientWidth - 32;
-      setScale(Math.min(1, h / (PHONE.height + 24), w / (PHONE.width + 24)));
-    };
+    const fit = () => setScale(Math.min(1, (host.clientHeight - 32) / (PHONE.height + 24), (host.clientWidth - 32) / (PHONE.width + 24)));
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(host);
@@ -57,10 +53,7 @@ function PhoneFrame({ children }: { children: ReactNode }) {
   }, []);
   return (
     <div ref={box} style={{ width: (PHONE.width + 24) * scale, height: (PHONE.height + 24) * scale }} className="shrink-0">
-      <div
-        className="origin-top-left rounded-[62px] bg-[#111] p-[12px] shadow-[0_30px_80px_rgba(20,24,38,0.28),inset_0_0_0_2px_#2a2a2a]"
-        style={{ transform: `scale(${scale})`, width: PHONE.width + 24, height: PHONE.height + 24 }}
-      >
+      <div className="origin-top-left rounded-[62px] bg-[#141a12] p-[12px] shadow-[0_30px_70px_rgba(34,57,29,0.25),inset_0_0_0_2px_#2a3327]" style={{ transform: `scale(${scale})`, width: PHONE.width + 24, height: PHONE.height + 24 }}>
         <div id="app-viewport" className="phone-viewport relative overflow-hidden rounded-[50px] bg-cream-bg" style={{ width: PHONE.width, height: PHONE.height }}>
           <StatusBar />
           <div className="pointer-events-none absolute left-1/2 top-[11px] z-[70] h-[34px] w-[122px] -translate-x-1/2 rounded-full bg-black" aria-hidden />
@@ -72,85 +65,94 @@ function PhoneFrame({ children }: { children: ReactNode }) {
   );
 }
 
-function MobileNotes() {
+/** Mobile: a slim brand bar on top (never covers the app) + notes/controls as bottom sheets. */
+function MobileShell({ children, inPhone }: { children: ReactNode; inPhone: boolean }) {
   const { state } = useDemo();
   const loc = useLocation();
-  const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState<'notes' | 'demo'>('notes');
+  const [sheet, setSheet] = useState<null | 'notes' | 'controls'>(null);
   const s = screenByPath(loc.pathname);
   const count = notesForScreen(s.id).length;
-  const { next, back, step, total } = useTourNav();
-
   const first = useRef(true);
+  const name = s.label.replace(/^S\d+ · /, '').replace(/^Courses tab.*/, 'Courses');
+
   useEffect(() => {
-    // Open the sheet when a marker is tapped — not on first render with a leftover selection.
+    // A tapped pin opens its note — but not a leftover selection on first render.
     if (first.current) {
       first.current = false;
       return;
     }
-    if (state.selectedNoteId && state.notesOn) {
-      setTab('notes');
-      setOpen(true);
-    }
+    // During the tour the caption explains the step; notes open only when asked.
+    if (state.selectedNoteId && state.notesOn && !state.tourActive) setSheet('notes');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.selectedNoteId, state.notesOn]);
 
   return (
-    <>
-      <div className="fixed bottom-[92px] right-3 z-[200] flex items-center gap-1 font-note">
-        {state.tourActive && !open && (
-          <div className="flex items-center rounded-full bg-[#3B4CCA] text-white shadow-lg">
-            <button type="button" onClick={back} className="flex h-11 w-10 items-center justify-center" aria-label="Previous step"><ChevronLeft size={18} /></button>
-            <span className="text-[12px] font-semibold">{step + 1}/{total}</span>
-            <button type="button" onClick={next} className="flex h-11 w-10 items-center justify-center" aria-label="Next step"><ChevronRight size={18} /></button>
-          </div>
-        )}
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="flex h-11 items-center gap-1.5 rounded-full bg-[#3B4CCA] px-4 text-[14px] font-semibold text-white shadow-[0_6px_20px_rgba(59,76,202,0.35)]"
-        >
-          <NotebookPen size={16} /> Notes{state.notesOn && count ? ` · ${count}` : ''}
-        </button>
+    <div className={`flex h-[100dvh] flex-col bg-[#F1EFE7] ${state.notesOn ? 'notes-on' : 'notes-off'}`}>
+      <div className="shrink-0 bg-green-900 text-[#F1EFE7]" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <div className="flex h-12 items-center gap-2 px-3">
+          <span className="shrink-0 rounded-full bg-white/10 px-2 py-[3px] text-[11px] font-semibold uppercase tracking-[0.08em] text-green-300">Pitch</span>
+          <span className="min-w-0 flex-1 truncate text-[13px] font-medium text-[#F1EFE7]/85">{inPhone ? name : 'SuperLiving add-ons'}</span>
+          {inPhone && state.notesOn && count > 0 && (
+            <button type="button" onClick={() => setSheet('notes')} className="flex h-9 items-center gap-1.5 rounded-full bg-mustard px-3 text-[13px] font-semibold text-green-900">
+              <Sparkles size={14} /> {count} changes
+            </button>
+          )}
+          <button type="button" onClick={() => setSheet('controls')} className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/10" aria-label="Demo settings">
+            <SlidersHorizontal size={18} />
+          </button>
+        </div>
+        {state.tourActive && <TourBar dense />}
       </div>
+      {inPhone ? (
+        <div id="app-viewport" className="mobile-viewport relative min-h-0 w-full flex-1 overflow-hidden bg-cream-bg">{children}</div>
+      ) : (
+        <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
+      )}
       <AnimatePresence>
-        {open && (
+        {sheet && (
           <>
-            <motion.div className="fixed inset-0 z-[210] bg-black/30" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)} />
+            <motion.div className="fixed inset-0 z-[210] bg-black/35" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSheet(null)} />
             <motion.div
-              className="fixed inset-x-0 bottom-0 z-[220] flex max-h-[82dvh] flex-col overflow-hidden rounded-t-[20px] bg-white font-note"
+              className="fixed inset-x-0 bottom-0 z-[220] flex max-h-[85dvh] flex-col overflow-hidden rounded-t-[24px] bg-[#F1EFE7]"
+              style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              transition={{ type: 'spring', damping: 32, stiffness: 320 }}
               role="dialog"
-              aria-label="Product notes"
+              aria-label={sheet === 'notes' ? 'What changed here' : 'Demo settings'}
             >
-              <div className="flex items-center justify-between border-b border-[#E3E5EE] px-3 py-2">
-                <div className="flex gap-1 rounded-lg bg-[#EEF0F6] p-0.5">
-                  {(['notes', 'demo'] as const).map((t) => (
-                    <button key={t} type="button" onClick={() => setTab(t)} className={`h-8 rounded-md px-3 text-[13px] font-medium ${tab === t ? 'bg-white shadow-sm' : 'text-[#5A5F7A]'}`}>
-                      {t === 'notes' ? 'Product notes' : 'Demo controls'}
-                    </button>
-                  ))}
-                </div>
-                <button type="button" onClick={() => setOpen(false)} className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-[#EEF0F6]" aria-label="Close notes">
-                  <X size={18} />
-                </button>
+              <div className="flex shrink-0 items-center justify-between px-4 pb-1 pt-3">
+                <span className="mx-auto h-1 w-10 rounded-full bg-black/15" />
               </div>
+              <button type="button" onClick={() => setSheet(null)} className="absolute right-3 top-2 flex h-10 w-10 items-center justify-center rounded-full bg-black/5" aria-label="Close">
+                <X size={18} />
+              </button>
               <div className="min-h-0 flex-1 overflow-hidden">
-                {tab === 'notes' ? <NotesPanel compact /> : <div className="overflow-y-auto p-4"><DemoControls vertical /></div>}
+                {sheet === 'notes' ? (
+                  <NotesPanel compact />
+                ) : (
+                  <div className="overflow-y-auto px-4 pb-6 pt-2">
+                    <h2 className="mb-3 text-[18px] font-semibold text-green-900">Demo settings</h2>
+                    <DemoControls vertical />
+                  </div>
+                )}
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
+
+// Screens that only exist in one persona's journey.
+const nehaOnly: Record<string, string> = { '/chat/tara': '/rohit-chat', '/me': '/rohit-chat', '/report': '/home', '/chat/dev': '/home', '/whatsapp': '/home', '/day30': '/home' };
 
 export function Layout({ children }: { children: ReactNode }) {
   const desktop = useIsDesktop();
   const loc = useLocation();
+  const navigate = useNavigate();
   const { state, selectNote } = useDemo();
   const s = screenByPath(loc.pathname);
   useKeyboardShortcuts();
@@ -162,44 +164,48 @@ export function Layout({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [s.id]);
 
+  // Switching persona takes you to that person's version of the screen.
+  const prevPersona = useRef(state.persona);
+  useEffect(() => {
+    if (prevPersona.current === state.persona) return;
+    prevPersona.current = state.persona;
+    if (state.tourActive) return;
+    if (state.persona === 'rohit' && nehaOnly[loc.pathname]) navigate(nehaOnly[loc.pathname]);
+    if (state.persona === 'neha' && loc.pathname === '/rohit-chat') navigate('/chat/tara');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.persona]);
+
+  if (!desktop) return <MobileShell inPhone={s.inPhone}>{children}</MobileShell>;
+
   if (!s.inPhone) {
     return (
-      <div className={`min-h-[100dvh] bg-[#F6F7FB] font-note ${state.notesOn ? 'notes-on' : 'notes-off'}`}>
-        {desktop && <DemoBar />}
-        {children}
+      <div className={`flex h-[100dvh] flex-col bg-[#F1EFE7] ${state.notesOn ? 'notes-on' : 'notes-off'}`}>
+        <DemoBar />
+        <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
         {state.tourActive && (
-          <div className="fixed bottom-4 right-4 z-[200] w-[360px] max-w-[calc(100vw-32px)] overflow-hidden rounded-2xl shadow-[0_10px_40px_rgba(20,24,38,0.25)]">
-            <TourBarLazy />
+          <div className="fixed bottom-5 right-5 z-[200] w-[380px] overflow-hidden rounded-2xl shadow-[0_12px_40px_rgba(34,57,29,0.3)]">
+            <TourBar />
           </div>
         )}
-        {!desktop && !state.tourActive && <MobileNotes />}
-      </div>
-    );
-  }
-
-  if (!desktop) {
-    return (
-      <div className={`${state.notesOn ? 'notes-on' : 'notes-off'}`}>
-        <div id="app-viewport" className="mobile-viewport relative h-[100dvh] w-full overflow-hidden bg-cream-bg">{children}</div>
-        <MobileNotes />
       </div>
     );
   }
 
   return (
-    <div className={`flex h-[100dvh] flex-col bg-[#E8E9EF] ${state.notesOn ? 'notes-on' : 'notes-off'}`}>
+    <div className={`flex h-[100dvh] flex-col bg-[#E7E3D6] ${state.notesOn ? 'notes-on' : 'notes-off'}`}>
       <DemoBar />
       <div className="flex min-h-0 flex-1">
         <main className="flex min-w-0 flex-1 items-center justify-center p-4">
           <PhoneFrame>{children}</PhoneFrame>
         </main>
         {(state.notesOn || state.tourActive) && (
-          <aside className="w-[380px] shrink-0 border-l border-[#E3E5EE] bg-[#F6F7FB]" aria-label="Product notes">
+          <aside className="w-[400px] shrink-0 border-l border-[#E4DFCF]" aria-label="What changed here">
             {state.notesOn ? (
               <NotesPanel />
             ) : (
-              <div className="font-note">
-                <NotesPanelTourOnly />
+              <div className="h-full bg-[#F1EFE7]">
+                <TourBar />
+                <p className="p-4 text-[14px] text-[#5E5D58]">Notes are off — this is the app exactly as users would see it. Press N to bring them back.</p>
               </div>
             )}
           </aside>
@@ -207,17 +213,4 @@ export function Layout({ children }: { children: ReactNode }) {
       </div>
     </div>
   );
-}
-
-function NotesPanelTourOnly() {
-  return (
-    <div>
-      <TourOnly />
-      <p className="p-4 text-[14px] text-[#4A4F66]">Notes are off. This is the app as users would see it. Press N to turn notes back on.</p>
-    </div>
-  );
-}
-function TourOnly() {
-  const { state } = useDemo();
-  return state.tourActive ? <TourBarLazy /> : null;
 }

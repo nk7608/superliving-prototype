@@ -1,3 +1,4 @@
+import { Avatar } from '../components/Avatar';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -60,7 +61,7 @@ export function Invite() {
           </>
         ) : (
           <>
-            <Initials name="Rohit Sharma" size={40} bg="#DFE5E7" fg="#54656F" />
+            <Avatar who="rohit" size={40} />
             <div className="flex-1">
               <div className="flex items-center gap-2 text-[17px] font-semibold">Rohit <span className="rounded bg-white/25 px-1.5 text-[11px] font-bold uppercase">{t('mock')}</span></div>
               <div className="text-[12.5px] opacity-85">online</div>
@@ -78,7 +79,7 @@ export function Invite() {
             ['Priya (didi)', '', false],
           ].map(([n, sub, sel]) => (
             <div key={n as string} className="flex min-h-[64px] items-center gap-3 px-4">
-              <Initials name={n as string} size={44} bg="#DFE5E7" fg="#54656F" />
+              {sel ? <Avatar who="rohit" size={44} /> : <Initials name={n as string} size={44} bg="#DFE5E7" fg="#54656F" />}
               <div className="flex-1">
                 <div className="text-[16px] text-[#111B21]">{n}</div>
                 {sub && <div className="text-[13px] text-[#667781]">{sub}</div>}
@@ -109,7 +110,7 @@ export function Invite() {
             <div className="px-1.5 text-right text-[11px] text-[#667781]">9:10 pm ✓✓</div>
           </motion.div>
           <div className="pt-6 text-center">
-            <button type="button" onClick={toRohit} className="inline-flex h-12 items-center gap-2 rounded-full bg-[#3B4CCA] px-5 font-['system-ui'] text-[15px] font-semibold text-white shadow-lg">
+            <button type="button" onClick={toRohit} className="inline-flex h-12 items-center gap-2 rounded-full bg-mustard px-5 text-[15px] font-semibold text-green-900 shadow-lg">
               <Smartphone size={18} /> {t('invOpenAsRohit')}
             </button>
             <p className="mt-2 text-[12px] text-[#667781]">{t('invDemoHint')}</p>

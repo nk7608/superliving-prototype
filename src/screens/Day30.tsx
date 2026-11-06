@@ -1,10 +1,11 @@
+import { Avatar } from '../components/Avatar';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Play, Pause, CalendarClock, UserCheck } from 'lucide-react';
 import { useDemo } from '../app/DemoContext';
 import { report } from '../data/report';
 import { Anchor } from '../notes/Anchor';
-import { BottomNav, Initials } from '../components/ui';
+import { BottomNav } from '../components/ui';
 import { Ring } from './Health';
 
 /** S16 — Day-30 snapshot: days not kilos, retest countdown, a person at the plateau. */
@@ -46,7 +47,7 @@ export function Day30() {
         <Anchor id="d30-voice" className="mt-4">
           <div className="rounded-card border border-[#D7CBEA] bg-white p-4">
             <div className="flex items-center gap-3">
-              <Initials name="Ritu RD" size={46} bg="#EDE5F7" fg="#5B3B8C" />
+              <Avatar who="ritu" size={48} />
               <div className="flex-1">
                 <div className="text-[16px] font-semibold">Ritu, RD</div>
                 <div className="flex items-center gap-1 text-[12.5px] font-medium text-[#5B3B8C]"><UserCheck size={14} /> {t('d30Human')}</div>
@@ -67,13 +68,13 @@ export function Day30() {
         </Anchor>
 
         <Anchor id="d30-retest" className="mt-4">
-          <div className="flex items-center gap-3 rounded-card border border-[#E4DFCF] bg-card p-4">
-            <CalendarClock size={26} className="shrink-0 text-green-700" />
-            <div className="flex-1">
-              <div className="text-[16px] font-semibold">{t('d30Retest', { date: report.retestDay90 })}</div>
-              <div className="text-[13.5px] text-text-secondary">{t('d30RetestSub')}</div>
+          <div className="flex items-start gap-3 rounded-card border border-[#E4DFCF] bg-card p-4">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-green-50 text-green-700"><CalendarClock size={22} /></span>
+            <div className="min-w-0 flex-1">
+              <div className="text-[16px] font-semibold leading-snug">{t('d30Retest', { date: report.retestDay90 })}</div>
+              <div className="mt-0.5 text-[13.5px] leading-snug text-text-secondary">{t('d30RetestSub')}</div>
+              <span className="mt-2 inline-block rounded-full bg-green-50 px-3 py-1 text-[13px] font-semibold text-green-700">60 {t('d30DaysLeft')}</span>
             </div>
-            <span className="rounded-full bg-green-50 px-3 py-1 text-[14px] font-semibold text-green-700">60 {t('d30DaysLeft')}</span>
           </div>
         </Anchor>
 
@@ -83,7 +84,7 @@ export function Day30() {
           {state.invited && state.rohitShares && <p className="mt-2 text-[14px] text-green-700">{t('rohitDidStep')}</p>}
         </div>
 
-        <button type="button" onClick={() => navigate('/changes')} className="mt-5 h-12 w-full rounded-full border-[1.5px] border-[#3B4CCA] bg-white font-['system-ui'] text-[15px] font-semibold text-[#3B4CCA]">
+        <button type="button" onClick={() => navigate('/changes')} className="mt-5 h-12 w-full rounded-full border-[1.5px] border-[#38592D] bg-white text-[15px] font-semibold text-[#38592D]">
           See all changes →
         </button>
       </div>

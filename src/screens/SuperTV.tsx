@@ -1,13 +1,13 @@
+import { Avatar } from '../components/Avatar';
 import { useState } from 'react';
 import { Play, Pause, ThumbsUp, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAction, useDemo, wait } from '../app/DemoContext';
-import { coachMeta } from '../data/coaches';
 import { knows } from '../data/memory';
 import { neha, rohit } from '../data/personas';
-import { originals, similarNeha, similarRohit, tarasTen, top10 } from '../data/videos';
+import { byCategory, categories, originals, similarNeha, similarRohit, tarasTen, top10 } from '../data/videos';
 import { Anchor } from '../notes/Anchor';
-import { BottomNav, Face, Sheet, Thumb } from '../components/ui';
+import { BottomNav, Sheet, Thumb } from '../components/ui';
 
 /** S11 — SuperTV with one pick, one reason (F5). */
 export function SuperTV() {
@@ -15,6 +15,7 @@ export function SuperTV() {
   const isRohit = state.persona === 'rohit';
   const vrat = !isRohit && knows(state, 'vrat');
   const [all, setAll] = useState(false);
+  const [cat, setCat] = useState<(typeof categories)[number]>('All');
   const [player, setPlayer] = useState(false);
   const [pos, setPos] = useState(0);
   const [watched, setWatched] = useState(false);
@@ -49,11 +50,13 @@ export function SuperTV() {
       <div className="shrink-0 bg-green-900" style={{ height: 'calc(var(--sat) + 22px)' }} />
       <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto pb-[110px]">
         <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 pt-3">
-          {['All', 'Weight Control', 'Skin Care', 'Hair Care', 'Festive & Spiritual'].map((c, i) => (
-            <span key={c} className={`flex h-[44px] shrink-0 items-center rounded-full px-4 text-[15px] font-medium ${i === 0 ? 'bg-green-900 text-white' : 'border-[1.5px] border-[#D8D4C6] bg-white text-[#1D1D1B]'}`}>{c}</span>
+          {categories.map((c) => (
+            <button key={c} type="button" onClick={() => setCat(c)} aria-pressed={cat === c} className={`flex h-[44px] shrink-0 items-center rounded-full px-4 text-[15px] font-medium ${cat === c ? 'bg-green-900 text-white' : 'border-[1.5px] border-[#D8D4C6] bg-white text-[#1D1D1B]'}`}>{c}</button>
           ))}
         </div>
 
+        {cat === 'All' ? (
+          <>
         <h2 className="px-4 pb-2 pt-3 text-[19px] font-medium text-[#1D1D1B]">Top 10 in India Today</h2>
         <div className="no-scrollbar flex gap-1 overflow-x-auto px-4">
           {top10.map((v, i) => (
@@ -64,11 +67,20 @@ export function SuperTV() {
           ))}
         </div>
 
+          </>
+        ) : (
+          <>
+            <h2 className="px-4 pb-2 pt-3 text-[19px] font-medium text-[#1D1D1B]">{cat}</h2>
+            <div className="no-scrollbar flex gap-3 overflow-x-auto px-4">
+              {byCategory[cat].map((v) => <Thumb key={v.title} v={v} w={124} h={196} showPrice />)}
+            </div>
+          </>
+        )}
         <h2 className="px-4 pb-2 pt-6 text-[19px] font-medium text-[#1D1D1B]">{t('pickedForYou')}</h2>
         <div className="px-4">
           <Anchor id="tv-banner">
             <div className="flex items-center gap-3 rounded-[18px] bg-green-900 px-4 py-3">
-              <Face spec={coachMeta.tara.face} className="h-12 w-12 shrink-0 rounded-[10px]" />
+              <Avatar who="tara" size={48} square />
               <div className="text-white">
                 <div className="flex items-center gap-2"><span className="text-[15px] font-semibold">Tara</span><span className="rounded-full bg-white/15 px-2 py-[1px] text-[10px] font-semibold tracking-wide">YOUR COACH</span></div>
                 <div className="mt-0.5 text-[14px] leading-snug text-white/90">{t('tvBanner', { name: first, reason: pick.reason })}</div>

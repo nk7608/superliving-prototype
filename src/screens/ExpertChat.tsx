@@ -1,8 +1,8 @@
+import { Avatar } from '../components/Avatar';
 import { useNavigate } from 'react-router-dom';
 import { useDemo } from '../app/DemoContext';
-import { coachMeta } from '../data/coaches';
 import { Anchor } from '../notes/Anchor';
-import { BottomNav, Face, StreakPill, Wordmark } from '../components/ui';
+import { BottomNav, StreakPill, Wordmark } from '../components/ui';
 import { CoachCard } from '../components/CoachCard';
 import { neha, rohit } from '../data/personas';
 
@@ -37,7 +37,7 @@ export function ExpertChat() {
         <div className="px-4 pt-4">
           <Anchor id="exp-tara">
             <div className="flex items-center gap-3 rounded-[20px] border border-[#DCE6D4] bg-green-50 p-3">
-              <Face spec={coachMeta.tara.face} className="h-12 w-12 shrink-0" rounded />
+              <Avatar who="tara" size={48} />
               <div className="min-w-0 flex-1">
                 <div className="text-[15px] font-semibold text-text-primary">{t('taraCardTitle')}</div>
                 <div className="text-[13px] leading-snug text-text-secondary">{t('taraCardSub')}</div>

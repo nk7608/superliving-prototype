@@ -87,7 +87,7 @@ export function OnboardingFlow({ variant = 'neha', onDone }: { variant?: 'neha' 
       ]
     : [];
 
-  const transcript = isRohit ? rohit.transcript : neha.transcript;
+  const transcript = isRohit ? t('transcriptRohit') : t('transcriptNeha');
 
   const startTyping = (src: string) => {
     setPhase('typing');
@@ -455,5 +455,7 @@ function Fallback({ fb, setFb }: { fb: { goals: string[]; age?: string; food?: s
 
 export function Onboarding() {
   const navigate = useNavigate();
-  return <OnboardingFlow variant="neha" onDone={() => navigate('/home')} />;
+  const { state } = useDemo();
+  // Whose phone it is decides whose onboarding you see (Rohit's is pre-filled from the household).
+  return <OnboardingFlow key={state.persona} variant={state.persona} onDone={() => navigate('/home')} />;
 }

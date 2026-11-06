@@ -1,8 +1,9 @@
+import { Avatar } from '../components/Avatar';
 import { useRef, useState } from 'react';
 import { ChevronRight, Headset, Play, Star, ArrowRight } from 'lucide-react';
 import { useAction, useDemo } from '../app/DemoContext';
 import { Anchor } from '../notes/Anchor';
-import { AppHeader, BottomNav, Initials, StreakPill, Thumb } from '../components/ui';
+import { AppHeader, BottomNav, StreakPill, Thumb } from '../components/ui';
 import { StepCard, StreakSheet } from '../components/StepCard';
 import { PriceSheet } from '../components/PriceSheet';
 import { CoachCard, WhoMakesSheet } from '../components/CoachCard';
@@ -74,9 +75,9 @@ export function Home() {
   useAction('open-streak', () => setStreak(true));
 
   const stories = [
-    { n: t('story1'), q: t('story1q'), tag: t('story1t'), bg: 'linear-gradient(160deg,#C9673A,#7A2E1F)', emoji: '👩🏽‍🍳' },
-    { n: t('story2'), q: t('story2q'), tag: t('story2t'), bg: 'linear-gradient(160deg,#3F6E8C,#1F3346)', emoji: '🚶🏽‍♂️' },
-    { n: t('story3'), q: t('story3q'), tag: t('story3t'), bg: 'linear-gradient(160deg,#7C5AA8,#3C2A5C)', emoji: '💇🏽‍♀️' },
+    { n: t('story1'), q: t('story1q'), tag: t('story1t'), bg: 'linear-gradient(170deg,#C9673A,#7A2E1F)', who: 'sunita' as const },
+    { n: t('story2'), q: t('story2q'), tag: t('story2t'), bg: 'linear-gradient(170deg,#3F6E8C,#1F3346)', who: 'imran' as const },
+    { n: t('story3'), q: t('story3q'), tag: t('story3t'), bg: 'linear-gradient(170deg,#4E7A45,#22391D)', who: 'kavya' as const },
   ];
 
   return (
@@ -138,12 +139,12 @@ export function Home() {
 
         <h2 className="px-4 pb-3 pt-7 text-[19px] font-bold text-text-primary">{t('createdBy')}</h2>
         <div className="no-scrollbar flex gap-3 overflow-x-auto px-4">
-          {[
-            { n: t('expertName1'), r: t('expertRole1') },
-            { n: t('expertName2'), r: t('expertRole2') },
-          ].map((e) => (
+          {([
+            { n: t('expertName1'), r: t('expertRole1'), w: 'yoga' },
+            { n: t('expertName2'), r: t('expertRole2'), w: 'advisor' },
+          ] as const).map((e) => (
             <button key={e.n} type="button" onClick={() => setWho(true)} className="flex w-[270px] shrink-0 items-center gap-3 rounded-[18px] border border-[#ECE8DC] bg-card p-3 text-left">
-              <Initials name={e.n} size={58} />
+              <Avatar who={e.w} size={58} square />
               <div>
                 <div className="text-[16px] font-semibold">{e.n}</div>
                 <div className="text-[13px] leading-snug text-text-secondary">{e.r}</div>
@@ -161,8 +162,8 @@ export function Home() {
                 {stories.map((s) => (
                   <div key={s.n} className="w-[168px] shrink-0">
                     <div className="relative h-[250px] overflow-hidden rounded-[16px]" style={{ background: s.bg }}>
-                      <div className="absolute inset-x-0 top-[60px] text-center text-[64px]" aria-hidden>{s.emoji}</div>
-                      <div className="absolute left-1/2 top-[44%] flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full bg-white/40"><Play size={18} fill="#fff" color="#fff" /></div>
+                      <div className="absolute inset-x-0 top-[28px] flex justify-center"><Avatar who={s.who} size={92} className="border-[3px] border-white/70" /></div>
+                      <div className="absolute left-1/2 top-[132px] flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full bg-white/30 backdrop-blur-sm"><Play size={17} fill="#fff" color="#fff" /></div>
                       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2.5 pt-8">
                         <div className="text-[13px] font-semibold text-white">{s.n}</div>
                         <div className="text-[12px] leading-snug text-white/90">{s.q}</div>

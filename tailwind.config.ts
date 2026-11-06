@@ -7,12 +7,12 @@ export default {
     extend: {
       colors: {
         ...colors,
-        'note-indigo': note.indigo,
-        'note-bg': note.panelBg,
+        'note-accent': note.accent,
+        'note-panel': note.panel,
       },
       fontFamily: {
         app: ['Poppins', 'system-ui', 'sans-serif'],
-        note: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        note: ['Poppins', 'system-ui', 'sans-serif'],
       },
       borderRadius: { card: '20px', sheet: '28px' },
     },

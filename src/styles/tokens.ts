@@ -30,19 +30,17 @@ export const colors = {
   'nav-active': '#E7E3C6',
 } as const;
 
-// Explainer layer (§7.1) — deliberately outside the app palette.
+// Explainer layer — uses the SuperLiving palette so the pitch feels like the product,
+// kept distinct by a mustard marker and a cream "notebook" panel.
 export const note = {
-  indigo: '#3B4CCA',
-  panelBg: '#F6F7FB',
-  tags: {
-    New: '#3B4CCA',
-    Changed: '#7A3FC7',
-    Merged: '#0E7C86',
-    Hidden: '#6B6B6B',
-    Fixed: '#B5541C',
-    Roadmap: '#3B4CCA',
-    Unchanged: '#8A8A8A',
-  },
+  ink: '#22391D',
+  muted: '#73726F',
+  line: '#E4DFCF',
+  panel: '#F1EFE7',
+  card: '#FFFDF8',
+  accent: '#E2C04C',
+  accentDark: '#8A6A12',
+  stage: '#E7E3D6',
 } as const;
 
 export const PHONE = { width: 393, height: 852 } as const;

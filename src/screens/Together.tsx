@@ -42,7 +42,7 @@ export function Together() {
         <button type="button" onClick={() => (view === 'roadmap' ? setView('now') : navigate(-1))} className="flex h-11 w-10 items-center justify-center" aria-label="Back"><ChevronLeft size={26} /></button>
         <span className="flex-1 text-[19px] font-semibold">{view === 'now' ? t('togTitle') : t('roadTitle')}</span>
         {view === 'roadmap' && (
-          <span className="mr-2 rounded-full border-[1.5px] border-dashed border-[#9AA5FF] px-2 py-[2px] font-['system-ui'] text-[11px] font-semibold text-[#C9CFFF]">Roadmap · not live</span>
+          <span className="mr-2 rounded-full border-[1.5px] border-dashed border-green-300 px-2 py-[2px] text-[11px] font-semibold text-green-300">Roadmap · not live</span>
         )}
       </header>
 
@@ -76,14 +76,14 @@ export function Together() {
                 </div>
               </div>
             </Anchor>
-            <button type="button" onClick={() => setView('roadmap')} className="mt-5 w-full rounded-card border-[1.5px] border-dashed border-[#3B4CCA] bg-white p-4 text-left">
-              <span className="font-['system-ui'] text-[11px] font-semibold uppercase tracking-wide text-[#3B4CCA]">Roadmap · not live</span>
+            <button type="button" onClick={() => setView('roadmap')} className="mt-5 w-full rounded-card border-[1.5px] border-dashed border-[#38592D] bg-white p-4 text-left">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-[#38592D]">Roadmap · not live</span>
               <span className="mt-1 block text-[17px] font-semibold text-text-primary">{t('roadTitle')} →</span>
               <span className="text-[14px] text-text-secondary">{t('roadTeaser')}</span>
             </button>
           </>
         ) : (
-          <div className="rounded-[24px] border-[1.5px] border-dashed border-[#3B4CCA] p-3">
+          <div className="rounded-[24px] border-[1.5px] border-dashed border-[#38592D] p-3">
             <p className="text-[15px] text-text-secondary">{t('roadSub')}</p>
             <Anchor id="road-clubs" className="mt-3">
               <div className="space-y-2.5">
@@ -125,7 +125,7 @@ export function Together() {
 
       <Sheet open={!!join} onClose={() => setJoin(null)} label={t('joinTitle')}>
         <div className="px-5 pb-2">
-          <span className="font-['system-ui'] text-[11px] font-semibold uppercase tracking-wide text-[#3B4CCA]">Roadmap · not live</span>
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[#38592D]">Roadmap · not live</span>
           <h3 className="mt-1 text-[19px] font-semibold">{clubs.find((c) => c.id === join)?.name}</h3>
           <div className="mt-1 flex items-center gap-3 text-[13px] text-text-secondary">
             <span className="flex items-center gap-1"><MapPin size={13} /> Kanpur</span>

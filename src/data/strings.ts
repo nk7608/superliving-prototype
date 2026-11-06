@@ -1,3 +1,4 @@
+import { neha as _neha, rohit as _rohit } from './personas';
 // Every product string, with `hi` (Hinglish, Latin script) and `en` (CLAUDE.md §6.6).
 // Unchanged app UI that is English in the real app keeps the same text in both.
 // The explainer layer is always plain English and does not live here.
@@ -35,6 +36,7 @@ add({
   mock: 'Mock',
   aiCoach: ['AI coach', 'AI coach'],
   aiCoachFast: ['AI coach · turant jawab', 'AI coach · instant reply'],
+  instantReply: ['turant jawab', 'instant reply'],
 });
 
 // ── S1 Onboarding (F0) ─────────────────────────────────────────────
@@ -547,4 +549,11 @@ add({
   taraNoFixedAck: ['Theek hai. Aapke chai ke time par hi yaad dilaungi.', 'Okay. I\'ll remind you only at your chai time.'],
   memTuition: ['Shaam 4–7 tuition · tab message nahi', 'Tuition 4–7 pm · no messages then'],
   taraHandoffLater: ['Koi baat nahi. Jab chahein, "Dev se baat" likh dijiye.', 'No problem. Whenever you want, just type "talk to Dev".'],
+});
+
+// ── Spoken transcripts (Hinglish = exactly the synthetic §12 data) ──
+add({
+  transcriptNeha: [_neha.transcript, 'I’m Neha, 34, from Kanpur. There are 6 of us at home and I do the cooking. My hair is falling a lot, I feel tired all the time, and I want to lose a little weight. I’m vegetarian and I fast on Tuesdays.'],
+  transcriptRohit: [_rohit.transcript, 'I’m Rohit, Neha’s husband. I work at a bank. After office I feel very tired and tense, I don’t sleep well, and my belly is growing.'],
+  rohitVoiceNote: [_rohit.eveningVoiceNote, 'There was a lot of pressure at the office today. I don’t feel like doing anything after coming home.'],
 });

@@ -137,38 +137,35 @@ export function MeSheet({ open, onClose }: { open: boolean; onClose: () => void 
                     const isFirst = firstRow;
                     firstRow = false;
                     return (
-                      <div key={r.id} className="px-4 py-2.5">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <div className="text-[12.5px] text-text-secondary">{r.label[lang]}</div>
-                            {editing === r.id ? (
-                              <form
-                                className="mt-1 flex gap-2"
-                                onSubmit={(e) => {
-                                  e.preventDefault();
-                                  set((s) => ({ edits: { ...s.edits, [r.id]: draft } }));
-                                  setEditing(null);
-                                }}
-                              >
-                                <input autoFocus value={draft} onChange={(e) => setDraft(e.target.value)} className="h-10 min-w-0 flex-1 rounded-xl border border-[#D5D0C0] px-3 text-[15px]" aria-label={r.label[lang]} />
-                                <button type="submit" className="h-10 rounded-full bg-green-700 px-3 text-[14px] font-semibold text-white">{t('save')}</button>
-                              </form>
-                            ) : (
-                              <div className={`text-[15.5px] font-medium text-text-primary ${r.inferred ? 'decoration-dotted' : ''}`}>{val}</div>
-                            )}
-                            <div className="mt-1">{isFirst ? <Anchor id="me-source" className="inline-block">{src}</Anchor> : src}</div>
+                      <div key={r.id} className="px-4 py-3">
+                        <div className="text-[12px] text-text-secondary">{r.label[lang]}</div>
+                        {editing === r.id ? (
+                          <form
+                            className="mt-1 flex gap-2"
+                            onSubmit={(e) => {
+                              e.preventDefault();
+                              set((s) => ({ edits: { ...s.edits, [r.id]: draft } }));
+                              setEditing(null);
+                            }}
+                          >
+                            <input autoFocus value={draft} onChange={(e) => setDraft(e.target.value)} className="h-10 min-w-0 flex-1 rounded-xl border border-[#D5D0C0] px-3 text-[15px]" aria-label={r.label[lang]} />
+                            <button type="submit" className="h-10 rounded-full bg-green-700 px-3 text-[14px] font-semibold text-white">{t('save')}</button>
+                          </form>
+                        ) : (
+                          <div className="text-[15.5px] font-medium leading-snug text-text-primary">{val}</div>
+                        )}
+                        {editing !== r.id && (
+                          <div className="mt-1.5 flex flex-wrap items-center gap-x-1 gap-y-1">
+                            {isFirst ? <Anchor id="me-source" className="inline-block pr-7" inset>{src}</Anchor> : src}
+                            <span className="flex-1" />
+                            <button type="button" onClick={() => { setEditing(r.id); setDraft(val); }} className="flex h-8 items-center gap-1 rounded-full px-2 text-[12.5px] font-medium text-green-700 hover:bg-green-50" aria-label={`${t('edit')} ${r.label[lang]}`}>
+                              <Pencil size={13} /> {t('edit')}
+                            </button>
+                            <button type="button" onClick={() => forget(r.id)} className="flex h-8 items-center gap-1 rounded-full px-2 text-[12.5px] font-medium text-[#A04A2E] hover:bg-[#F8E3D8]" aria-label={`${t('meForget')} ${r.label[lang]}`}>
+                              <Trash2 size={13} /> {t('meForget')}
+                            </button>
                           </div>
-                          {editing !== r.id && (
-                            <div className="flex shrink-0 gap-1">
-                              <button type="button" onClick={() => { setEditing(r.id); setDraft(val); }} className="flex h-10 items-center gap-1 rounded-full px-2 text-[13px] font-medium text-green-700" aria-label={`${t('edit')} ${r.label[lang]}`}>
-                                <Pencil size={14} /> {t('edit')}
-                              </button>
-                              <button type="button" onClick={() => forget(r.id)} className="flex h-10 items-center gap-1 rounded-full px-2 text-[13px] font-medium text-[#A04A2E]" aria-label={`${t('meForget')} ${r.label[lang]}`}>
-                                <Trash2 size={14} /> {t('meForget')}
-                              </button>
-                            </div>
-                          )}
-                        </div>
+                        )}
                       </div>
                     );
                   })}

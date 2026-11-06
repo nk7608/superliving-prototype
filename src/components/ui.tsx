@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, CircleUserRound, PlayCircle, ClipboardList, Heart, X, Play, Lock } from 'lucide-react';
 import { useDemo } from '../app/DemoContext';
-import type { FaceSpec } from '../data/coaches';
 import type { Thumb as ThumbT } from '../data/videos';
 
 // ───────────── Bottom nav: floating frosted pill, 5 tabs (§6.4, ref 08) ─────────────
@@ -124,32 +123,6 @@ export function CenterModal({ open, onClose, children, label }: { open: boolean;
   );
 }
 
-// ───────────── Placeholder faces (no real photos, §6.5) ─────────────
-export function Face({ spec, className = '', rounded = false }: { spec: FaceSpec; className?: string; rounded?: boolean }) {
-  const { skin, hair, style, shirt, bg, beard } = spec;
-  return (
-    <svg viewBox="0 0 120 120" className={className} role="img" aria-label="Illustrated placeholder avatar" style={rounded ? { borderRadius: '9999px' } : undefined}>
-      <rect width="120" height="120" fill={bg} />
-      {style === 'long' && <path d="M30 60c0-22 13-36 30-36s30 14 30 36v40H30z" fill={hair} />}
-      <path d="M18 120c4-22 20-32 42-32s38 10 42 32z" fill={shirt} />
-      <rect x="52" y="74" width="16" height="16" rx="6" fill={skin} />
-      <ellipse cx="60" cy="56" rx="21" ry="24" fill={skin} />
-      {style === 'short' && <path d="M38 52c0-16 10-25 22-25s22 9 22 25c-4-7-10-11-22-11s-18 4-22 11z" fill={hair} />}
-      {style === 'long' && <path d="M38 54c2-18 10-27 22-27s20 9 22 27c-8-9-14-13-22-13s-14 4-22 13z" fill={hair} />}
-      {style === 'bun' && (
-        <>
-          <circle cx="60" cy="25" r="9" fill={hair} />
-          <path d="M38 54c1-17 10-26 22-26s21 9 22 26c-6-8-13-12-22-12s-16 4-22 12z" fill={hair} />
-        </>
-      )}
-      {beard && <path d="M43 62c3 14 9 19 17 19s14-5 17-19c-4 5-10 7-17 7s-13-2-17-7z" fill={hair} opacity="0.85" />}
-      <circle cx="52" cy="57" r="2.2" fill="#2a1c14" />
-      <circle cx="68" cy="57" r="2.2" fill="#2a1c14" />
-      <path d="M53 67c4 3 10 3 14 0" stroke="#8a4b3a" strokeWidth="2" fill="none" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 export function Initials({ name, size = 40, bg = '#E3EBD9', fg = '#3D6B35' }: { name: string; size?: number; bg?: string; fg?: string }) {
   const ini = name.split(' ').map((p) => p[0]).slice(0, 2).join('');
   return (
@@ -161,10 +134,12 @@ export function Initials({ name, size = 40, bg = '#E3EBD9', fg = '#3D6B35' }: { 
 
 // ───────────── Placeholder video thumbnail (§6.5) ─────────────
 export function Thumb({ v, w = 132, h = 210, showPrice = false, onClick }: { v: ThumbT; w?: number; h?: number; showPrice?: boolean; onClick?: () => void }) {
+  const { state } = useDemo();
+  const title = state.lang === 'en' && v.en ? v.en : v.title;
   return (
-    <button type="button" onClick={onClick} className="relative shrink-0 overflow-hidden rounded-[16px] text-left" style={{ width: w, height: h, background: v.bg }} aria-label={v.title}>
+    <button type="button" onClick={onClick} className="relative shrink-0 overflow-hidden rounded-[16px] text-left" style={{ width: w, height: h, background: v.bg }} aria-label={title}>
       <div className="absolute inset-x-0 top-0 p-[10px] text-[17px] font-extrabold uppercase leading-[1.05] tracking-[-0.3px]" style={{ color: v.fg ?? '#fff', fontFamily: 'Poppins' }}>
-        {v.title}
+        {title}
       </div>
       <div className="absolute inset-x-0 bottom-[22px] text-center" style={{ fontSize: h * 0.28 }} aria-hidden>
         {v.emoji}

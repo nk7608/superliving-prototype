@@ -19,11 +19,11 @@ export function Ring({ value, total, size = 46 }: { value: number; total: number
 
 function Counter({ icon, val, total, unit, label, onAdd }: { icon: React.ReactNode; val: number; total: number; unit?: string; label: string; onAdd: () => void }) {
   return (
-    <div className="relative flex flex-1 flex-col items-center rounded-[18px] border border-[#E6E1D1] bg-[#FAF8F1] px-2 pb-3 pt-3">
-      <button type="button" onClick={onAdd} aria-label={`Add ${label}`} className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-green-900 text-white after:absolute after:-inset-1.5 after:content-['']">
-        <Plus size={18} />
+    <div className="relative flex min-w-0 flex-1 flex-col items-center rounded-[18px] border border-[#E6E1D1] bg-[#FAF8F1] px-1.5 pb-3 pt-3">
+      <button type="button" onClick={onAdd} aria-label={`Add ${label}`} className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-green-900 text-white after:absolute after:-inset-2 after:content-['']">
+        <Plus size={16} />
       </button>
-      <span className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[#EAEDE2] text-green-800">{icon}</span>
+      <span className="mt-1 flex h-9 w-9 items-center justify-center rounded-[10px] bg-[#EAEDE2] text-green-800">{icon}</span>
       <div className="mt-2 text-[20px] font-bold text-text-primary">
         {val}
         <span className="text-[14px] font-semibold text-text-secondary">/{total}{unit ? ` ${unit}` : ''}</span>

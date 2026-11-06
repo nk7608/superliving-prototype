@@ -1,11 +1,10 @@
+import { Avatar } from '../components/Avatar';
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Video, Phone, MoreVertical, Lock, Smile, Paperclip, Camera, Mic, Flashlight } from 'lucide-react';
 import { useAction, useDemo, wait } from '../app/DemoContext';
-import { coachMeta } from '../data/coaches';
 import { Anchor } from '../notes/Anchor';
-import { Face } from '../components/ui';
 import { WhatsAppGlyph } from '../components/Chat';
 
 /** S3 — next morning, 6:30: neutral lock-screen preview → WhatsApp chat (mock). */
@@ -78,10 +77,10 @@ export function WhatsApp() {
     <div className="absolute inset-0 flex flex-col" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <header className="flex items-center gap-2 bg-[#008069] px-2 pb-2.5 text-white" style={{ paddingTop: 'calc(var(--sat) + 6px)' }}>
         <button type="button" onClick={() => setOpen(false)} className="flex h-11 w-9 items-center justify-center" aria-label="Back"><ArrowLeft size={22} /></button>
-        <Face spec={coachMeta.tara.face} className="h-10 w-10" rounded />
+        <Avatar who="tara" size={40} />
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 text-[17px] font-semibold">Tara (SuperLiving) <span className="rounded bg-white/25 px-1.5 text-[11px] font-bold uppercase">{t('mock')}</span></div>
-          <div className="text-[12.5px] opacity-85">{t('waBusiness')}</div>
+          <div className="truncate text-[17px] font-semibold">Tara (SuperLiving)</div>
+          <div className="flex items-center gap-1.5 text-[12.5px] opacity-90">{t('waBusiness')} <span className="rounded bg-white/25 px-1.5 text-[10.5px] font-bold uppercase">{t('mock')}</span></div>
         </div>
         <Video size={20} className="mx-1.5" />
         <Phone size={19} className="mx-1.5" />

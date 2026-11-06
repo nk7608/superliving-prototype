@@ -2,7 +2,7 @@
 
 A clickable, self-explaining prototype of the add-ons I would ship in my first 90 days at SuperLiving: **one memory shared by every coach, turned into one small step a day, with a human stepping in where it matters.**
 
-Every new or changed element carries an indigo numbered marker. Its **Product note** covers what we saw, what changed, why, what stays, how we'd measure it and the safety rule. The notes are the PRD. All data is synthetic.
+Every new or changed element carries a yellow numbered pin. Tapping it opens a short card: **Before → Now → Why → How we'd know**. These cards are the PRD. Each screen also opens with a one-line summary of what changed there. All data is synthetic.
 
 **Live:** https://superliving-prototype.vercel.app (auto-deploys from `main`)
 
@@ -19,12 +19,12 @@ Routing uses `HashRouter`, so `dist/` works on any static host with no rewrite r
 
 ## How to use it
 
-- **Intro (S0):** choose *Take the 5-min tour* or *Explore freely*.
-- **Tour:** 22 steps (CLAUDE.md §10). Each step sets the screen and persona, opens one note, and may play a scripted action, such as the voice note, the upload or the WhatsApp reply. Use Next/Back in the tour bar.
-- **Explore:** tap any indigo marker to open its note and outline the element. The panel lists every note on the screen, plus items that were hidden or merged.
-- **Demo bar (desktop):** Tour/Explore, Notes on/off, Persona (Neha/Rohit), App language (Hinglish/English), Jump to screen, Reset demo.
-- **Mobile (<1024px):** the app fills the screen. A floating **Notes** pill opens the notes and demo controls as a bottom sheet.
-- **All changes (S17):** every note in a table you can filter by tag, plus metrics, "what we did not change", human in the loop, and sources.
+- **Intro:** pick *Take the 5-minute tour*, *Explore on my own*, or start at any of the 8 chapters.
+- **Guided tour:** 22 steps in 8 chapters (The idea · Neha joins · One step a day · One memory · Report to plan · Content and trust · Family and care · What comes next). Each step sets the screen and the persona, plays its scripted action, and shows a one-line caption.
+- **Explore:** tap any yellow pin. The panel on the right (on mobile, the *changes* button) explains what changed on that screen.
+- **Controls:** Guided tour / Explore, Notes on/off, whose phone (Neha/Rohit), app language (Hinglish/English), jump to screen, all changes, reset. Every change applies instantly, everywhere. Switching persona on a screen that belongs to the other person takes you to their version.
+- **Mobile (<1024px):** the app fills the screen under a slim brand bar. The tour caption sits in that bar, and notes and settings open as bottom sheets.
+- **All changes:** every change grouped by chapter, filterable by type, plus how we'd measure it, where a person steps in, and what we didn't change.
 
 ### Keyboard
 
@@ -55,7 +55,8 @@ src/
 ## Privacy
 
 - `reference/` holds real app screenshots used only for visual matching. It is **never imported** and is listed in `.gitignore`. Don't publish it.
-- No real photos, thumbnails or logo files are used. Faces are SVG placeholders, and thumbnails are coloured cards with emoji.
+- No real photos, thumbnails or logo files are used. People are illustrations from **Notionists by Zoish (CC0 1.0)**, pre-rendered to `public/avatars/` by `npm run avatars`. Thumbnails are coloured cards with emoji.
+- The explainer layer uses SuperLiving's own palette (dark green, cream, mustard pins) instead of the indigo in CLAUDE.md §7.1. This was changed at the author's request so the pitch reads as part of the product.
 - All personas, lab values and stories are synthetic.
 
 Not affiliated with SuperLiving.

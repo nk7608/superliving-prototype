@@ -76,7 +76,7 @@ export function RohitChat() {
         <CoachBubble coachId="tara" time="07:00 AM">{t('rohitMorning')}</CoachBubble>
         <DayDivider>9:40 PM</DayDivider>
 
-        {past('voice') && <VoiceBubble secs={6} transcript={rohit.eveningVoiceNote} time="09:40 PM" />}
+        {past('voice') && <VoiceBubble secs={6} transcript={t('rohitVoiceNote')} time="09:40 PM" />}
         {past('listen') && (
           <>
             {listened && (<>
