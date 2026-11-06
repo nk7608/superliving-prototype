@@ -3,7 +3,7 @@ import { ArrowRight, Check, Play } from 'lucide-react';
 import { useDemo } from '../app/DemoContext';
 import { effectiveScreen, screenById } from '../app/screens';
 import { hiddenItems, noteById, notesForScreen, screenIntro } from '../data/notes';
-import { chapterOfScreen, chapters, firstStepOfChapter, tour } from '../data/tour';
+import { chapterFor, chaptersFor, firstStepOf, tourFor } from '../data/tour';
 import { TagPill, Pin } from './NoteCard';
 
 /** Open a note: go to its screen, light it up, and reveal it if it lives in a sheet. */
@@ -44,12 +44,14 @@ export function NotesPanel({ compact = false, onPick }: { compact?: boolean; onP
   const list = notesForScreen(screen.id);
   const hidden = hiddenItems[screen.id] ?? [];
   const openNote = useOpenNote();
-  const current = state.tourActive ? tour[state.tourStep]?.chapter ?? 1 : chapterOfScreen[screen.id] ?? 1;
+  const who = state.tourActive ? state.tourOf : state.persona;
+  const chapters = chaptersFor(who);
+  const current = state.tourActive ? tourFor(who)[state.tourStep]?.chapter ?? 1 : chapterFor(who, screen.id);
 
   return (
     <div className="flex h-full flex-col bg-[#F1EFE7] text-green-900">
       <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 pt-4">
-        <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#8A6A12]">The story</div>
+        <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#8A6A12]">{who === 'rohit' ? 'Rohit’s story' : 'Neha’s story'}</div>
         <ol className="mt-2 space-y-0.5">
           {chapters.map((c, i) => {
             const n = i + 1;
@@ -60,7 +62,7 @@ export function NotesPanel({ compact = false, onPick }: { compact?: boolean; onP
                 <button
                   type="button"
                   onClick={() => {
-                    goTour(firstStepOfChapter(n));
+                    goTour(firstStepOf(who, n), who);
                     onPick?.();
                   }}
                   className={`flex w-full items-center gap-2.5 rounded-xl px-2 py-1.5 text-left ${on ? 'bg-[#FFFDF8] shadow-[0_1px_0_#E4DFCF]' : 'hover:bg-white/50'}`}

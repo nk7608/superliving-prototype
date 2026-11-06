@@ -13,6 +13,7 @@ export default {
       fontFamily: {
         app: ['Poppins', 'system-ui', 'sans-serif'],
         note: ['Poppins', 'system-ui', 'sans-serif'],
+        hand: ['Caveat', 'cursive'],
       },
       borderRadius: { card: '20px', sheet: '28px' },
     },

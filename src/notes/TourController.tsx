@@ -2,11 +2,12 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useDemo } from '../app/DemoContext';
-import { chapters, tour } from '../data/tour';
+import { chaptersFor, tourFor } from '../data/tour';
 
 export function useTourNav() {
   const { state, goTour, exitTour } = useDemo();
   const navigate = useNavigate();
+  const tour = tourFor(state.tourOf);
   const next = () => {
     if (state.tourStep >= tour.length - 1) {
       exitTour();
@@ -14,12 +15,12 @@ export function useTourNav() {
     } else goTour(state.tourStep + 1);
   };
   const back = () => state.tourStep > 0 && goTour(state.tourStep - 1);
-  return { next, back, exit: exitTour, step: state.tourStep, total: tour.length };
+  return { next, back, exit: exitTour, step: state.tourStep, total: tour.length, tour, chapters: chaptersFor(state.tourOf) };
 }
 
 /** Dark-green tour card: chapter, one caption, progress, Back/Next. */
 export function TourBar({ dense = false }: { dense?: boolean }) {
-  const { next, back, exit, step, total } = useTourNav();
+  const { next, back, exit, step, total, tour, chapters } = useTourNav();
   const s = tour[step];
   const last = step >= total - 1;
   return (

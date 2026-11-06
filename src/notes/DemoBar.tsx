@@ -1,9 +1,10 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { RotateCcw, ListChecks, ChevronDown } from 'lucide-react';
+import { RotateCcw, ListChecks, ChevronDown, X } from 'lucide-react';
 import { useDemo } from '../app/DemoContext';
 import { screenByPath, screens } from '../app/screens';
 import type { PersonaId } from '../data/personas';
 import { Avatar } from '../components/Avatar';
+import { tourFor } from '../data/tour';
 
 function Seg<T extends string>({ value, options, onChange, label, dark = true }: { value: T; options: { v: T; l: string }[]; onChange: (v: T) => void; label: string; dark?: boolean }) {
   return (
@@ -40,7 +41,7 @@ export function DemoControls({ vertical = false }: { vertical?: boolean }) {
     <div className={vertical ? 'space-y-4' : 'flex flex-wrap items-center gap-2'}>
       <div>
         <Label>Mode</Label>
-        <Seg dark={dark} label="Mode" value={state.tourActive ? 'tour' : 'explore'} onChange={(v) => (v === 'tour' ? goTour(state.tourStep) : exitTour())} options={[{ v: 'tour', l: 'Guided tour' }, { v: 'explore', l: 'Explore' }]} />
+        <Seg dark={dark} label="Mode" value={state.tourActive ? 'tour' : 'explore'} onChange={(v) => (v === 'tour' ? goTour(state.tourOf === state.persona ? state.tourStep : 0, state.persona) : exitTour())} options={[{ v: 'tour', l: 'Guided tour' }, { v: 'explore', l: 'Explore' }]} />
       </div>
       <div>
         <Label>Product notes</Label>
@@ -49,9 +50,9 @@ export function DemoControls({ vertical = false }: { vertical?: boolean }) {
       <div>
         <Label>Whose phone</Label>
         <Seg<PersonaId> dark={dark} label="Persona" value={state.persona} onChange={(v) => {
-          // A persona switch is a deliberate detour: leave the scripted tour so it sticks.
-          if (state.tourActive) exitTour();
-          set({ persona: v, selectedNoteId: null });
+          // Switching phones mid-tour starts that person's own tour; otherwise it just switches.
+          if (state.tourActive) goTour(tourFor(v)[0]?.path === '/' ? 1 : 0, v); // start inside the app, not on the intro
+          else set({ persona: v, selectedNoteId: null });
         }} options={[{ v: 'neha', l: 'Neha' }, { v: 'rohit', l: 'Rohit' }]} />
       </div>
       <div>
@@ -104,6 +105,17 @@ export function PhoneOwner({ light = false, short = false }: { light?: boolean; 
   );
 }
 
+/** Opt out of the guided tour at any moment. */
+export function EndTour({ compact = false }: { compact?: boolean }) {
+  const { state, exitTour } = useDemo();
+  if (!state.tourActive) return null;
+  return (
+    <button type="button" onClick={exitTour} className={`flex shrink-0 items-center gap-1 rounded-full bg-mustard font-semibold text-green-900 shadow-sm hover:brightness-105 ${compact ? 'h-8 px-2.5 text-[12px]' : 'h-8 px-3 text-[12.5px]'}`}>
+      End tour <X size={14} />
+    </button>
+  );
+}
+
 export function DemoBar() {
   const navigate = useNavigate();
   return (
@@ -114,6 +126,7 @@ export function DemoBar() {
           <span className="hidden text-[13px] text-[#F1EFE7]/70 xl:inline">90-day add-ons</span>
         </button>
         <PhoneOwner />
+        <EndTour />
       </div>
       <DemoControls />
     </header>

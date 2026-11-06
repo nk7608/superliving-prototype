@@ -65,3 +65,26 @@ export const chapterOfScreen: Record<string, number> = {
   COACH: 4, S11: 6, S12: 6, S13: 7, S14: 7, S15: 8, S16: 8, COURSES: 3, S17: 8, INDEX: 6,
 };
 export const firstStepOfChapter = (c: number) => Math.max(0, tour.findIndex((t) => t.chapter === c));
+
+// ── Rohit's own tour: the same ideas, seen from the husband's phone ──
+export const rohitChapters = ['Rohit joins', 'His one step', 'A coach at night', 'One memory', 'His settings'];
+export const rohitTour: TourStep[] = [
+  { chapter: 1, path: '/onboarding', persona: 'rohit', noteId: 'F10-prefill', needs: ['onboarded'], caption: 'Neha invited Rohit. His setup already knows their kitchen.' },
+  { chapter: 1, path: '/onboarding', persona: 'rohit', noteId: 'F10-privacy', action: 'onb-speak', needs: ['onboarded'], caption: 'He speaks once. Sharing progress with Neha stays off unless he turns it on.' },
+  { chapter: 2, path: '/home', persona: 'rohit', noteId: 'F3-step', needs: ['onboarded', 'rohitOnboarded'], caption: 'His day starts with his own step: a short walk after office.' },
+  { chapter: 2, path: '/meal', persona: 'rohit', noteId: 'F6-usual', needs: ['onboarded', 'rohitOnboarded'], caption: 'His usual office chai logs in one tap.' },
+  { chapter: 3, path: '/rohit-chat', persona: 'rohit', noteId: 'F11-listen', action: 'rohit-voice-listen', needs: ['onboarded', 'rohitOnboarded'], caption: '9:40 pm. He asks Tara just to listen, and she does.' },
+  { chapter: 3, path: '/rohit-chat', persona: 'rohit', noteId: 'F11-safety', action: 'safety', needs: ['onboarded', 'rohitOnboarded'], caption: 'If crisis words appear, coaching stops and people step in.' },
+  { chapter: 4, path: '/chat/coach/arjun', persona: 'rohit', noteId: 'F1-crosscoach', needs: ['onboarded', 'rohitOnboarded'], caption: 'Arjun has never met him, yet already knows his evenings are hard.' },
+  { chapter: 4, path: '/tv', persona: 'rohit', noteId: 'F5-pick', needs: ['onboarded', 'rohitOnboarded'], caption: 'SuperTV picks a 2-minute breathing video, for his reason.' },
+  { chapter: 5, path: '/profile', persona: 'rohit', noteId: 'F7-preview', action: 'open-checkins', needs: ['onboarded', 'rohitOnboarded'], caption: 'He picks quiet hours and keeps the lock screen private.' },
+];
+
+export type TourWho = 'neha' | 'rohit';
+export const tourFor = (who: TourWho) => (who === 'rohit' ? rohitTour : tour);
+export const chaptersFor = (who: TourWho) => (who === 'rohit' ? rohitChapters : chapters);
+
+const rohitChapterOfScreen: Record<string, number> = { S13: 1, S1: 1, S2: 2, S4: 2, S5: 2, S14: 3, COACH: 4, S6: 4, S11: 4, S12: 5 };
+export const chapterFor = (who: TourWho, screenId: string) =>
+  who === 'rohit' ? rohitChapterOfScreen[screenId] ?? 1 : chapterOfScreen[screenId] ?? 1;
+export const firstStepOf = (who: TourWho, c: number) => Math.max(0, tourFor(who).findIndex((t) => t.chapter === c));

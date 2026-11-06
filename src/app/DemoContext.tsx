@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { PersonaId } from '../data/personas';
 import type { ActionName } from '../data/notes';
-import { tour, type Precondition } from '../data/tour';
+import { tourFor, type Precondition, type TourWho } from '../data/tour';
 import { tr, type Lang } from '../data/strings';
 
 const KEY = 'sl-demo-v1';
@@ -15,6 +15,7 @@ export interface DemoState {
   notesOn: boolean;
   tourActive: boolean;
   tourStep: number;
+  tourOf: TourWho; // whose story the guided tour follows
   selectedNoteId: string | null;
   onboarded: Record<PersonaId, boolean>;
   chaiTime: string | null;
@@ -46,6 +47,7 @@ export const initialState: DemoState = {
   notesOn: true,
   tourActive: false,
   tourStep: 0,
+  tourOf: 'neha',
   selectedNoteId: null,
   onboarded: { neha: false, rohit: false },
   chaiTime: null,
@@ -89,7 +91,7 @@ interface Ctx {
   action: { name: ActionName; nonce: number; at: number } | null;
   runAction: (name: ActionName) => void;
   selectNote: (id: string | null) => void;
-  goTour: (step: number) => void;
+  goTour: (step: number, who?: TourWho) => void;
   exitTour: () => void;
   ensure: (needs: Precondition[]) => void;
   markStep: (status: StepStatus, who?: PersonaId) => void;
@@ -160,12 +162,15 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const stateRef = useRef(state);
+  stateRef.current = state;
   const goTour = useCallback(
-    (step: number) => {
-      const st = tour[step];
+    (step: number, who?: TourWho) => {
+      const whoNow = who ?? stateRef.current.tourOf;
+      const st = tourFor(whoNow)[step];
       if (!st) return;
       if (st.needs) ensure(st.needs);
-      set({ tourActive: true, tourStep: step, selectedNoteId: st.noteId ?? null, ...(st.persona ? { persona: st.persona } : {}), ...(st.path !== '/' ? { notesOn: true } : {}) });
+      set({ tourActive: true, tourOf: whoNow, tourStep: step, selectedNoteId: st.noteId ?? null, persona: st.persona ?? whoNow, ...(st.path !== '/' ? { notesOn: true } : {}) });
       if (location.pathname !== st.path) navigate(st.path);
       if (st.action) {
         const a = st.action;
@@ -175,7 +180,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     [ensure, set, navigate, location.pathname, runAction],
   );
 
-  const exitTour = useCallback(() => set({ tourActive: false }), [set]);
+  const exitTour = useCallback(() => set({ tourActive: false, selectedNoteId: null }), [set]);
 
   const reset = useCallback(() => {
     try {

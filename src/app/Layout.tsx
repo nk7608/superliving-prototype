@@ -4,11 +4,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X, SlidersHorizontal, Map, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useDemo } from './DemoContext';
 import { effectiveScreen, screenByPath } from './screens';
-import { DemoBar, DemoControls, PhoneOwner } from '../notes/DemoBar';
+import { DemoBar, DemoControls, EndTour, PhoneOwner } from '../notes/DemoBar';
 import { NotesPanel } from '../notes/NotesPanel';
 import { TourBar, useKeyboardShortcuts, useTourNav } from '../notes/TourController';
 import { Guide } from '../notes/Guide';
-import { chapterOfScreen, chapters, tour } from '../data/tour';
+import { chapterFor, chaptersFor, tourFor } from '../data/tour';
 import { noteById, notesForScreen } from '../data/notes';
 import { PHONE } from '../styles/tokens';
 
@@ -97,7 +97,9 @@ function MobileShell({ children, inPhone }: { children: ReactNode; inPhone: bool
   const [sheet, setSheet] = useState<null | 'story' | 'controls'>(null);
   const s = effectiveScreen(loc.pathname, state.persona);
   const count = notesForScreen(s.id).length;
-  const chapter = state.tourActive ? tour[state.tourStep]?.chapter ?? 1 : chapterOfScreen[s.id] ?? 1;
+  const who = state.tourActive ? state.tourOf : state.persona;
+  const chapters = chaptersFor(who);
+  const chapter = state.tourActive ? tourFor(who)[state.tourStep]?.chapter ?? 1 : chapterFor(who, s.id);
 
   useEffect(() => setSheet(null), [loc.pathname]);
 
@@ -114,7 +116,8 @@ function MobileShell({ children, inPhone }: { children: ReactNode; inPhone: bool
             </span>
             <span className="truncate text-[12.5px] text-[#F1EFE7]/85">{chapters[chapter - 1]}</span>
           </button>
-          {inPhone && state.notesOn && count > 0 && (
+          {state.tourActive && <EndTour compact />}
+          {!state.tourActive && inPhone && state.notesOn && count > 0 && (
             <button type="button" onClick={() => setSheet('story')} className="flex h-8 shrink-0 items-center gap-1 rounded-full bg-mustard px-2.5 text-[12.5px] font-semibold text-green-900">
               <Map size={14} /> {count}
             </button>

@@ -77,3 +77,12 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
+
+/* Hand-drawn strokes: draw in once. Plain CSS so it never stalls. */
+@keyframes pen-draw {
+  from { stroke-dasharray: var(--len, 1000); stroke-dashoffset: var(--len, 0); }
+  to { stroke-dasharray: var(--len, 1000); stroke-dashoffset: 0; }
+}
+/* Dashed only while drawing (fill: backwards), solid after — so a moving arrow never clips. */
+.pen-draw { animation: pen-draw .9s ease-out backwards; }
+@media (prefers-reduced-motion: reduce) { .pen-draw { animation: none; stroke-dashoffset: 0; } }
