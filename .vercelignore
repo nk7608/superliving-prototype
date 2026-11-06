@@ -1,0 +1,6 @@
+reference/
+node_modules/
+dist/
+.claude/
+.DS_Store
+tsconfig.tsbuildinfo

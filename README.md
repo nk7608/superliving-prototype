@@ -4,6 +4,8 @@ A clickable, self-explaining prototype of the add-ons I would ship in my first 9
 
 Every new or changed element carries an indigo numbered marker. Its **Product note** covers what we saw, what changed, why, what stays, how we'd measure it and the safety rule. The notes are the PRD. All data is synthetic.
 
+**Live:** https://superliving-prototype.vercel.app (auto-deploys from `main`)
+
 ## Run it
 
 ```bash
