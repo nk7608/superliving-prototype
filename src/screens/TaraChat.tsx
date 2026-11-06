@@ -23,6 +23,8 @@ export function TaraChat({ mode = 'chat' }: { mode?: Mode }) {
   const [askShown, setAskShown] = useState(false);
   const [autoStart, setAutoStart] = useState(0);
   const [handoffDeclined, setHandoffDeclined] = useState(false);
+  // The handoff is offered only after Neha herself asks about her hair.
+  const [askedHair, setAskedHair] = useState(false);
 
   const vratKnown = knows(state, 'vrat');
   const learnedKey = vratKnown ? 'vratFood' : 'breakfast';
@@ -76,6 +78,7 @@ export function TaraChat({ mode = 'chat' }: { mode?: Mode }) {
   });
   useAction('show-handoff', () => {
     if (!hasReport) set({ report: 'ready' });
+    setAskedHair(true);
   });
   useAction('report-upload', () => {
     if (state.report !== 'none') setSteps(true);
@@ -97,7 +100,7 @@ export function TaraChat({ mode = 'chat' }: { mode?: Mode }) {
   return (
     <div className="absolute inset-0 flex flex-col">
       <ChatHeader coachId="tara" onMe={openMe} markMe markLabel />
-      <ChatBody deps={[intent, typing, askShown, actDone, hasReport, tuitionAsked, handoffDeclined]}>
+      <ChatBody deps={[intent, typing, askShown, actDone, hasReport, tuitionAsked, handoffDeclined, askedHair]}>
         <DayDivider>{t('today')}</DayDivider>
         {/* source of the Health tab's "Tara ke chat se: 2 glass paani" auto-fill (F6) */}
         <UserBubble time="08:49 AM">{t('nehaWater')}</UserBubble>
@@ -174,8 +177,12 @@ export function TaraChat({ mode = 'chat' }: { mode?: Mode }) {
               {t('taraReportRead')}
               <button type="button" onClick={openSteps} className="mt-2.5 h-11 w-full rounded-full bg-green-700 text-[15px] font-semibold text-white">{t('repOpen')}</button>
             </CoachBubble>
+            {!askedHair ? (
+              <QuickReplies options={[{ label: t('askHair'), v: 'h' }, { label: t('thanksTara'), v: 'x' }]} onPick={(v) => v === 'h' && setAskedHair(true)} />
+            ) : (
             <Anchor id="chat-handoff">
               <div className="space-y-2">
+                <UserBubble time="06:55 PM">{t('askHair')}</UserBubble>
                 <CoachBubble coachId="tara" time="06:55 PM">{t('taraHandoff')}</CoachBubble>
                 {handoffDeclined ? (
                   <>
@@ -187,6 +194,7 @@ export function TaraChat({ mode = 'chat' }: { mode?: Mode }) {
                 )}
               </div>
             </Anchor>
+            )}
           </>
         )}
         {typing && <Typing coachId="tara" />}

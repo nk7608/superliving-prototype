@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, SlidersHorizontal, Map, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useDemo } from './DemoContext';
-import { screenByPath } from './screens';
+import { effectiveScreen, screenByPath } from './screens';
 import { DemoBar, DemoControls, PhoneOwner } from '../notes/DemoBar';
 import { NotesPanel } from '../notes/NotesPanel';
 import { TourBar, useKeyboardShortcuts, useTourNav } from '../notes/TourController';
@@ -40,6 +40,16 @@ function StatusBar() {
   );
 }
 
+/** Screens glide in, so moving through the story feels like one app, not page loads. */
+function ScreenFade({ children }: { children: ReactNode }) {
+  const loc = useLocation();
+  return (
+    <motion.div key={loc.pathname} className="absolute inset-0" initial={{ opacity: 0, x: 14 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.28, ease: [0.2, 0.8, 0.2, 1] }}>
+      {children}
+    </motion.div>
+  );
+}
+
 function PhoneFrame({ children }: { children: ReactNode }) {
   const [scale, setScale] = useState(1);
   const box = useRef<HTMLDivElement>(null);
@@ -59,7 +69,7 @@ function PhoneFrame({ children }: { children: ReactNode }) {
         <div id="app-viewport" className="phone-viewport relative overflow-hidden rounded-[50px] bg-cream-bg" style={{ width: PHONE.width, height: PHONE.height }}>
           <StatusBar />
           <div className="pointer-events-none absolute left-1/2 top-[11px] z-[70] h-[34px] w-[122px] -translate-x-1/2 rounded-full bg-black" aria-hidden />
-          {children}
+          <ScreenFade>{children}</ScreenFade>
           <Guide />
           <div className="pointer-events-none absolute bottom-[8px] left-1/2 z-[70] h-[5px] w-[134px] -translate-x-1/2 rounded-full bg-black/80" aria-hidden />
         </div>
@@ -85,7 +95,7 @@ function MobileShell({ children, inPhone }: { children: ReactNode; inPhone: bool
   const { state } = useDemo();
   const loc = useLocation();
   const [sheet, setSheet] = useState<null | 'story' | 'controls'>(null);
-  const s = screenByPath(loc.pathname);
+  const s = effectiveScreen(loc.pathname, state.persona);
   const count = notesForScreen(s.id).length;
   const chapter = state.tourActive ? tour[state.tourStep]?.chapter ?? 1 : chapterOfScreen[s.id] ?? 1;
 
@@ -116,7 +126,7 @@ function MobileShell({ children, inPhone }: { children: ReactNode; inPhone: bool
       </div>
       {inPhone ? (
         <div id="app-viewport" className="mobile-viewport relative min-h-0 w-full flex-1 overflow-hidden bg-cream-bg">
-          {children}
+          <ScreenFade>{children}</ScreenFade>
           <Guide />
         </div>
       ) : (
@@ -171,7 +181,7 @@ export function Layout({ children }: { children: ReactNode }) {
   const loc = useLocation();
   const navigate = useNavigate();
   const { state, selectNote } = useDemo();
-  const s = screenByPath(loc.pathname);
+  const s = effectiveScreen(loc.pathname, state.persona);
   useKeyboardShortcuts();
 
   // Drop a selection that belongs to another screen (e.g. after tapping the bottom nav).

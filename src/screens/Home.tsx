@@ -32,15 +32,20 @@ function BloodCard({ name, tests, old, price, icon, tint, best = false }: { name
   );
 }
 
-function CourseCard({ title, chips, reviews, old, price, art, artBg }: { title: string; chips: string[]; reviews: string; old: string; price: string; art: string; artBg: string }) {
+function CourseCard({ title, chips, reviews, old, price, art, artBg, ribbon }: { title: string; chips: string[]; reviews: string; old: string; price: string; art: string; artBg: string; ribbon?: string }) {
   const { t } = useDemo();
   return (
     <div className="overflow-hidden rounded-card border border-[#ECE8DC] bg-card">
-      <div className="flex gap-3 p-3">
+      {ribbon && (
+        <div className="flex justify-end px-3 pt-3">
+          <span className="rounded-md bg-mustard-light px-2 py-[3px] text-[10.5px] font-bold tracking-wide text-[#3B2E05]">{ribbon}</span>
+        </div>
+      )}
+      <div className={`flex gap-3 p-3 ${ribbon ? 'pt-2' : ''}`}>
         <div className="flex h-[150px] w-[104px] shrink-0 items-center justify-center rounded-[14px] p-2 text-center text-[15px] font-extrabold uppercase leading-tight text-[#2A3D2A]" style={{ background: artBg }}>
           {art}
         </div>
-        <div className="min-w-0 flex-1 pt-6">
+        <div className="min-w-0 flex-1 pt-1">
           <div className="text-[18px] font-semibold leading-snug text-[#1D1D1B]">{title}</div>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {chips.map((c) => (
@@ -114,10 +119,7 @@ export function Home() {
 
         <h2 className="px-4 pb-3 pt-7 text-[20px] font-bold text-text-primary">{t('superPlans')}</h2>
         <div className="space-y-4 px-4">
-          <div className="relative">
-            <span className="absolute right-0 top-[18px] z-[1] rounded-l-md bg-mustard-light px-2.5 py-[3px] text-[12px] font-bold tracking-wide text-[#3B2E05]">{t('personalised')}</span>
-            <CourseCard title={t('course1')} chips={[t('course1a'), t('course1b'), t('course1c')]} reviews={t('reviews12k')} old="₹999" price="₹189" art="Fix Work-Life Balance" artBg="#DCE9DF" />
-          </div>
+          <CourseCard ribbon={t('personalised')} title={t('course1')} chips={[t('course1a'), t('course1b'), t('course1c')]} reviews={t('reviews12k')} old="₹999" price="₹189" art="Fix Work-Life Balance" artBg="#DCE9DF" />
           <CourseCard title={t('course2')} chips={[t('course2a'), t('course2b'), t('course2c')]} reviews={t('reviews16k')} old="₹449" price="₹159" art="15-Days Sleep Routine Reset" artBg="#9FCB98" />
         </div>
 

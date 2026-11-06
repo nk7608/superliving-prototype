@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { X, FileText, Copy, Share2, CalendarClock, Clock, BadgeCheck, ChevronDown } from 'lucide-react';
 import { useAction, useDemo, wait } from '../app/DemoContext';
@@ -178,8 +179,8 @@ export function NextStepsSheet({ open, onClose }: { open: boolean; onClose: () =
 
         <Anchor id="rep-card" className="mt-3">
           <div className="space-y-2.5">
-            {rows.map(({ v, range, todo, food }) => (
-              <div key={v.name} className="rounded-[18px] border border-[#E6E1D1] bg-white p-3.5">
+            {rows.map(({ v, range, todo, food }, i) => (
+              <motion.div key={v.name} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + i * 0.15, type: 'spring', stiffness: 260, damping: 24 }} className="rounded-[18px] border border-[#E6E1D1] bg-white p-3.5">
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="text-[16px] font-semibold text-text-primary">{v.name}</div>
@@ -189,7 +190,7 @@ export function NextStepsSheet({ open, onClose }: { open: boolean; onClose: () =
                 </div>
                 <div className="mt-2 text-[14.5px] leading-snug text-text-primary">→ {todo}</div>
                 {food && <div className="mt-1 text-[14px] text-green-700">🥗 {food}</div>}
-              </div>
+              </motion.div>
             ))}
           </div>
         </Anchor>

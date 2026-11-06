@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRight, Check, Play } from 'lucide-react';
 import { useDemo } from '../app/DemoContext';
-import { screenById, screenByPath } from '../app/screens';
+import { effectiveScreen, screenById } from '../app/screens';
 import { hiddenItems, noteById, notesForScreen, screenIntro } from '../data/notes';
 import { chapterOfScreen, chapters, firstStepOfChapter, tour } from '../data/tour';
 import { TagPill, Pin } from './NoteCard';
@@ -20,7 +20,7 @@ export function useOpenNote() {
     }
     if (state.tourActive) exitTour();
     const target = screenById(n.screen);
-    const here = screenByPath(loc.pathname).id === n.screen;
+    const here = effectiveScreen(loc.pathname, state.persona).id === n.screen;
     if (target.persona) set({ persona: target.persona });
     set({ notesOn: true });
     selectNote(id);
@@ -40,7 +40,7 @@ export function NotesPanel({ compact = false, onPick }: { compact?: boolean; onP
   const { state, goTour } = useDemo();
   const loc = useLocation();
   const navigate = useNavigate();
-  const screen = screenByPath(loc.pathname);
+  const screen = effectiveScreen(loc.pathname, state.persona);
   const list = notesForScreen(screen.id);
   const hidden = hiddenItems[screen.id] ?? [];
   const openNote = useOpenNote();

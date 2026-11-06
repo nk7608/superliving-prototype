@@ -1,8 +1,9 @@
+import { motion } from 'framer-motion';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, X, ChevronDown } from 'lucide-react';
 import { useDemo } from '../app/DemoContext';
-import { screenByPath } from '../app/screens';
+import { effectiveScreen } from '../app/screens';
 import { noteById, notesForScreen, type ProductNote } from '../data/notes';
 import { chapters, tour } from '../data/tour';
 import { useTourNav } from './TourController';
@@ -18,7 +19,7 @@ function useAnchorBox(anchor: string | undefined, active: boolean) {
       setBox(null);
       return;
     }
-    let raf = 0;
+    let timer = 0;
     let last = '';
     const tick = () => {
       const vp = document.getElementById('app-viewport');
@@ -49,10 +50,11 @@ function useAnchorBox(anchor: string | undefined, active: boolean) {
         last = 'none';
         setBox(null);
       }
-      raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    tick();
+    // a light timer (not rAF) so it keeps up while scrolling and in throttled tabs
+    timer = window.setInterval(tick, 60);
+    return () => clearInterval(timer);
   }, [anchor, active]);
   return box;
 }
@@ -83,7 +85,7 @@ function WhyMore({ note }: { note: ProductNote }) {
 export function Guide() {
   const { state, selectNote, runAction } = useDemo();
   const loc = useLocation();
-  const screen = screenByPath(loc.pathname);
+  const screen = effectiveScreen(loc.pathname, state.persona);
   const { next, back, exit, step, total } = useTourNav();
   const tourStep = state.tourActive ? tour[step] : undefined;
   const onThisScreen = notesForScreen(screen.id);
@@ -169,9 +171,12 @@ export function Guide() {
         />
       ) : null}
 
-      <div
+      <motion.div
           key={(mode === 'tour' ? `t${step}` : note?.id) ?? 'none'}
           ref={cardRef}
+          initial={{ opacity: 0, scale: 0.96, y: 6 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ type: 'spring', stiffness: 420, damping: 30, mass: 0.6 }}
           role="dialog"
           aria-label={note?.title ?? 'Tour'}
           className="pointer-events-auto absolute z-10 rounded-[20px] bg-[#FFFDF8] p-4 text-green-900 shadow-[0_12px_40px_rgba(18,28,15,0.35)]"
@@ -245,7 +250,7 @@ export function Guide() {
               )}
             </>
           ) : null}
-        </div>
+        </motion.div>
     </div>
   );
 }

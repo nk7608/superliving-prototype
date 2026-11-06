@@ -40,7 +40,8 @@ export const tour: TourStep[] = [
 
   { chapter: 4, path: '/experts', persona: 'neha', noteId: 'F2-tara-card', needs: ['onboarded'], caption: 'Tara leads, because she already knows Neha.' },
   { chapter: 4, path: '/chat/tara', persona: 'neha', noteId: 'F1-chip', action: 'intent-act', needs: ['onboarded'], caption: 'Neha asks for help. Each new fact Tara learns is saved in plain sight.' },
-  { chapter: 4, path: '/me', persona: 'neha', noteId: 'F1-source', needs: ['onboarded'], caption: 'All of it lives on one card that every coach reads.' },
+  { chapter: 4, path: '/me', persona: 'neha', noteId: 'F1-me', needs: ['onboarded'], caption: 'It all goes into one memory that sits under every coach.' },
+  { chapter: 4, path: '/chat/coach/rashmi', persona: 'neha', noteId: 'F1-crosscoach', needs: ['onboarded'], caption: 'So Rashmi, a coach she has never met, already knows her.' },
 
   { chapter: 5, path: '/report', persona: 'neha', noteId: 'F4-nextsteps', action: 'report-upload', needs: ['onboarded'], caption: 'Her blood report becomes three clear next steps, free.' },
   { chapter: 5, path: '/report', persona: 'neha', noteId: 'F4-review', action: 'report-review', needs: ['onboarded', 'report'], caption: 'Anything out of range is checked by a real dietitian.' },
@@ -61,6 +62,6 @@ export const tour: TourStep[] = [
 /** Which chapter each screen belongs to (for the story map). */
 export const chapterOfScreen: Record<string, number> = {
   S0: 1, S1: 2, S2: 3, S3: 3, S4: 3, S5: 3, S6: 4, S7: 4, S8: 4, S9: 5, S10: 5,
-  S11: 6, S12: 6, S13: 7, S14: 7, S15: 8, S16: 8, COURSES: 3, S17: 8, INDEX: 6,
+  COACH: 4, S11: 6, S12: 6, S13: 7, S14: 7, S15: 8, S16: 8, COURSES: 3, S17: 8, INDEX: 6,
 };
 export const firstStepOfChapter = (c: number) => Math.max(0, tour.findIndex((t) => t.chapter === c));

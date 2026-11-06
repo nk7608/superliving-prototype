@@ -2,7 +2,7 @@ import type { PersonaId } from '../data/personas';
 
 export type ScreenId =
   | 'S0' | 'S1' | 'S2' | 'S3' | 'S4' | 'S5' | 'S6' | 'S7' | 'S8' | 'S9' | 'S10'
-  | 'S11' | 'S12' | 'S13' | 'S14' | 'S15' | 'S16' | 'S17' | 'COURSES';
+  | 'S11' | 'S12' | 'S13' | 'S14' | 'S15' | 'S16' | 'S17' | 'COURSES' | 'COACH';
 
 export interface ScreenDef {
   id: ScreenId;
@@ -31,6 +31,7 @@ export const screens: ScreenDef[] = [
   { id: 'S8', path: '/me', label: "Me card", persona: 'neha', inPhone: true, clock: '8:55', statusTone: 'dark', statusBg: '#FFFFFF' },
   { id: 'S9', path: '/report', label: "Blood report", persona: 'neha', inPhone: true, clock: '6:53', statusTone: 'dark', statusBg: '#FFFFFF' },
   { id: 'S10', path: '/chat/dev', label: "Dev, hair coach", persona: 'neha', inPhone: true, clock: '7:02', statusTone: 'dark', statusBg: '#FFFFFF' },
+  { id: 'COACH', path: '/chat/coach', label: "Any other coach", persona: 'neha', inPhone: true, clock: '7:10', statusTone: 'dark', statusBg: '#FFFFFF' },
   { id: 'S11', path: '/tv', label: "SuperTV", inPhone: true, clock: '8:57', statusTone: 'light', statusBg: '#22391D' },
   { id: 'S12', path: '/profile', label: "Profile & prices", persona: 'neha', inPhone: true, clock: '8:58', statusTone: 'light', statusBg: '#2A5B2B' },
   { id: 'S13', path: '/invite', label: "Invite Rohit", inPhone: true, clock: '9:10', statusTone: 'light', statusBg: 'transparent' },
@@ -44,3 +45,7 @@ export const screens: ScreenDef[] = [
 export const screenByPath = (path: string): ScreenDef =>
   screens.find((s) => s.path === path) ?? screens.find((s) => s.path !== '/' && path.startsWith(s.path)) ?? screens[0];
 export const screenById = (id: ScreenId) => screens.find((s) => s.id === id)!;
+
+/** The screen whose notes apply: Rohit's onboarding is the household-invite story (S13), not Neha's. */
+export const effectiveScreen = (path: string, persona: string): ScreenDef =>
+  path === '/onboarding' && persona === 'rohit' ? { ...screenByPath(path), id: 'S13', label: "Rohit joins" } : screenByPath(path);

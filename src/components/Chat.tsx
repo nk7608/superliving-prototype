@@ -6,6 +6,7 @@ import { useDemo } from '../app/DemoContext';
 import { coachById } from '../data/coaches';
 import { Anchor } from '../notes/Anchor';
 import { Avatar, type Who } from './Avatar';
+import { memSaved, useMemPulse } from './motion';
 
 export function WhatsAppGlyph({ size = 15, color = '#25A244' }: { size?: number; color?: string }) {
   return (
@@ -20,16 +21,30 @@ export function ChatHeader({ coachId, onMe, markMe = false, markLabel = false }:
   const { t } = useDemo();
   const navigate = useNavigate();
   const c = coachById(coachId);
-  const name = coachId === 'tara' ? 'Tara' : c.name;
+  const name = c.name.replace(/^(Coach|Chef) /, '');
   const label = (
     <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-green-100 px-1.5 py-[1px] text-[11px] font-semibold text-green-600">
       <Bot size={11} /> {t('aiCoach')}
     </span>
   );
+  const pulses = useMemPulse();
   const me = (
-    <button type="button" onClick={onMe} className="flex h-[38px] items-center gap-1.5 rounded-full border-[1.5px] border-[#2D3B28] bg-green-50 px-3 text-[15px] font-semibold text-[#22391D]">
+    <motion.button
+      key={pulses}
+      type="button"
+      onClick={onMe}
+      initial={{ scale: pulses ? 1.18 : 1 }}
+      animate={{ scale: 1 }}
+      transition={{ type: 'spring', stiffness: 420, damping: 11 }}
+      className="relative flex h-[38px] items-center gap-1.5 rounded-full border-[1.5px] border-[#2D3B28] bg-green-50 px-3 text-[15px] font-semibold text-[#22391D]"
+    >
       <User size={16} fill="#22391D" /> Me
-    </button>
+      {pulses > 0 && (
+        <motion.span initial={{ opacity: 1, y: 0 }} animate={{ opacity: 0, y: -18 }} transition={{ duration: 1.1 }} className="absolute -right-1 -top-2 rounded-full bg-mustard px-1.5 text-[11px] font-bold text-green-900">
+          +1
+        </motion.span>
+      )}
+    </motion.button>
   );
   return (
     <header className="relative z-[45] flex items-center gap-2 border-b border-[#E7E4DA] bg-white pb-2.5 pl-1 pr-3" style={{ paddingTop: 'calc(var(--sat) + 10px)' }}>
@@ -115,13 +130,22 @@ export function FileCard({ name, meta, time }: { name: string; meta: string; tim
 /** F1 — "Me mein save hua: … ✓ · Edit" */
 export function MemChip({ text, onEdit }: { text: string; onEdit: () => void }) {
   const { t } = useDemo();
+  useEffect(() => {
+    const id = window.setTimeout(memSaved, 450);
+    return () => clearTimeout(id);
+  }, []);
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="ml-[46px] -mt-1 flex">
-      <span className="flex min-h-[30px] items-center gap-1.5 rounded-full border border-[#CFE3C8] bg-green-50 px-3 text-[13px] text-green-700">
+    <motion.div initial={{ opacity: 0, y: 8, scale: 0.92 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: 'spring', stiffness: 380, damping: 22 }} className="relative ml-[46px] -mt-1 flex">
+      <motion.span
+        className="flex min-h-[30px] items-center gap-1.5 rounded-full border border-[#CFE3C8] bg-green-50 px-3 text-[13px] text-green-700"
+        initial={{ boxShadow: '0 0 0 0 rgba(123,198,126,0.7)' }}
+        animate={{ boxShadow: ['0 0 0 0 rgba(123,198,126,0.7)', '0 0 0 10px rgba(123,198,126,0)'] }}
+        transition={{ duration: 0.9, delay: 0.2 }}
+      >
         <span>{t('memSaved')}: <b className="font-semibold">{text}</b> ✓</span>
         <span className="text-[#9BB592]">·</span>
         <button type="button" onClick={onEdit} className="hit font-semibold underline underline-offset-2">{t('edit')}</button>
-      </span>
+      </motion.span>
     </motion.div>
   );
 }

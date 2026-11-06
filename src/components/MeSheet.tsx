@@ -5,6 +5,9 @@ import { useDemo } from '../app/DemoContext';
 import { memoryFor, type MemSection } from '../data/memory';
 import { Anchor } from '../notes/Anchor';
 import { Sheet, SheetClose } from './ui';
+import { MemoryLayer } from './MemoryLayer';
+import { Avatar } from './Avatar';
+import { motion } from 'framer-motion';
 
 const sections: { id: MemSection | 'checkins' | 'family'; key: string }[] = [
   { id: 'basics', key: 'meBasics' },
@@ -38,12 +41,14 @@ export function MeSheet({ open, onClose }: { open: boolean; onClose: () => void 
     <Sheet open={open} onClose={onClose} label={t('meTitle')} full>
       <div className="px-4">
         <div className="flex items-start justify-between gap-3">
-          <Anchor id="me-header" className="min-w-0 flex-1 pr-2">
+          <div className="min-w-0 flex-1 pr-2">
             <h2 className="text-[22px] font-semibold text-text-primary">{t('meTitle')}</h2>
             <p className="mt-0.5 text-[14px] leading-snug text-text-secondary">{state.persona === 'rohit' ? t('meSubRohit') : t('meSub')}</p>
-          </Anchor>
+          </div>
           <SheetClose onClick={onClose} label={t('close')} />
         </div>
+
+        <Anchor id="me-header" className="mt-3"><MemoryLayer /></Anchor>
 
         {lastForgot && (
           <div className="mt-3 flex items-center justify-between gap-2 rounded-2xl bg-[#1F2A1B] px-3.5 py-2.5 text-[14px] text-white" role="status">
@@ -137,7 +142,7 @@ export function MeSheet({ open, onClose }: { open: boolean; onClose: () => void 
                     const isFirst = firstRow;
                     firstRow = false;
                     return (
-                      <div key={r.id} className="px-4 py-3">
+                      <motion.div key={r.id} className="px-4 py-3" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
                         <div className="text-[12px] text-text-secondary">{r.label[lang]}</div>
                         {editing === r.id ? (
                           <form
@@ -157,6 +162,11 @@ export function MeSheet({ open, onClose }: { open: boolean; onClose: () => void 
                         {editing !== r.id && (
                           <div className="mt-1.5 flex flex-wrap items-center gap-x-1 gap-y-1">
                             {isFirst ? <Anchor id="me-source" className="inline-block pr-7" inset>{src}</Anchor> : src}
+                            <span className="ml-1 flex items-center" title={t('memSeenBy')} aria-label={t('memSeenBy')}>
+                              {(['tara', 'dev', 'rashmi'] as const).map((w, k) => (
+                                <Avatar key={w} who={w} size={18} className={`border border-white ${k ? '-ml-1.5' : ''}`} />
+                              ))}
+                            </span>
                             <span className="flex-1" />
                             <button type="button" onClick={() => { setEditing(r.id); setDraft(val); }} className="flex h-8 items-center gap-1 rounded-full px-2 text-[12.5px] font-medium text-green-700 hover:bg-green-50" aria-label={`${t('edit')} ${r.label[lang]}`}>
                               <Pencil size={13} /> {t('edit')}
@@ -166,7 +176,7 @@ export function MeSheet({ open, onClose }: { open: boolean; onClose: () => void 
                             </button>
                           </div>
                         )}
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>

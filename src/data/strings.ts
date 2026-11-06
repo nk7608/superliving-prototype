@@ -291,7 +291,9 @@ add({
   uploadReport: ['Report upload karein', 'Upload report'],
   taraReportRead: ['Report padh li ✓ 3 baatein zaroori hain: B12 kam, Vitamin D kam, aur HbA1c par dhyan dena hai. Pehli read free hai.', 'Report read ✓ 3 things matter: low B12, low Vitamin D, and HbA1c to watch. The first read is free.'],
   repOpen: ['Next steps dekhein', 'See next steps'],
-  taraHandoff: ['Baalon ke liye Dev se baat karwa doon? Unhe aapki report ke 3 points pehle se pata honge.', 'Shall I connect you to Dev for your hair? He\'ll already know the 3 points from your report.'],
+  askHair: ['Baal jhadne ke liye kya karun?', 'What can I do about my hair fall?'],
+  thanksTara: ['Theek hai, shukriya', 'Okay, thanks'],
+  taraHandoff: ['Iske liye Dev, hamare hair coach, sabse achhe rahenge. Unhe aapki report aur khana pehle se pata hoga — jod doon?', 'Dev, our hair coach, is best for this. He\'ll already know your report and food — shall I connect you?'],
   notNow: ['Abhi nahi', 'Not now'],
   callTara: ['Call Tara', 'Call Tara'], callDev: 'Call Dev',
   mealPlan: ['Meal Plan', 'Meal Plan'],
@@ -563,4 +565,26 @@ add({
   usualOffice: ['Chai + 2 biscuit (office)', 'Chai + 2 biscuits (office)'],
   mealOffice: 'Chai + biscuit', mealOfficeP: ['1 cup chai · 2 biscuit', '1 cup chai · 2 biscuits'],
   mealOfficeTip: ['Office ki chai ke saath biscuit ki jagah mutthi bhar bhuna chana lein — pet bhara rahega.', 'Swap the biscuits for a handful of roasted chana with your office chai — keeps you full longer.'],
+});
+
+// ── Shared memory across coaches (F1) ──
+add({
+  memLayerName: ['Aapki yaad', 'Your memory'],
+  memLayerLine: ['Ek baar kisi bhi coach ko bataya — sabko pata. Dobara batana nahi padega.', 'Tell any coach once and they all know. You never repeat yourself.'],
+  memSeenBy: ['Sab coaches dekhte hain', 'All coaches can see'],
+  memOnlyYou: ['Sirf aap', 'Only you'],
+  firstChat: ['{coach} se pehli baat', 'First chat with {coach}'],
+  coachFromMemory: ['{coach} ko aapki yaad se pehle se pata hai', '{coach} already knows, from your memory'],
+  coachNoRepeat: ['Yeh aapne Tara ko bataya tha — yahan dobara nahi batana.', 'You told Tara this — no need to say it again here.'],
+  coachHello: ['Namaste Neha! Main {coach} hoon.', 'Namaste Neha! I’m {coach}.'],
+  coachKnows: ['Tara se pata chala {list}.', 'Tara told me {list}.'],
+  cfVeg: ['aap veg khana banati hain', 'you cook vegetarian'],
+  cfVrat: ['Mangalvar ko vrat rakhti hain', 'you fast on Tuesdays'],
+  cfTuition: ['shaam 4–7 busy rehti hain', 'you’re busy 4–7 pm'],
+  coachPlan_rashmi: ['Skin ke liye wahi dahi aur dhoop wala step kaam aayega — naya kuch nahi jodte.', 'The same curd-and-sunlight step helps your skin — nothing new to add.'],
+  coachPlan_arjun: ['Toh walk subah chai ke baad rakhte hain — bas 10 minute.', 'So let’s keep the walk after morning chai — just 10 minutes.'],
+  coachPlan_sandy: ['Aaj 6 logon ke liye ek makhana-dahi recipe banayein?', 'Shall we make a makhana-curd recipe for six today?'],
+  coachPlan_dev: ['Baalon ke liye dahi aur dhoop se shuru karein?', 'Shall we start your hair plan with curd and sun?'],
+  coachPlan_tara: ['Aaj kaise madad karoon?', 'How can I help today?'],
+  coachOpenRohit: ['Namaste Rohit! Main {coach} hoon. Tara se pata hai office ke baad tension rehti hai aur neend kam hai — shuruaat halki rakhenge.', 'Namaste Rohit! I’m {coach}. Tara told me work leaves you tense and short on sleep — we’ll start gently.'],
 });

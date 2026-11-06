@@ -51,7 +51,7 @@ export function CoachCard({ id, markLabel = false, markCount = false }: { id: st
           <button type="button" onClick={() => setWho(true)} className="hit mt-2 self-start text-[12px] text-green-600 underline decoration-dotted underline-offset-2">
             {t('whoMakes')}
           </button>
-          <button type="button" onClick={() => navigate(id === 'dev' ? '/chat/dev' : state.persona === 'rohit' ? '/rohit-chat' : '/chat/tara')} className="mt-2 h-11 w-full rounded-full bg-green-800 text-[15px] font-semibold text-white">
+          <button type="button" onClick={() => navigate(id === 'dev' ? '/chat/dev' : id === 'tara' ? (state.persona === 'rohit' ? '/rohit-chat' : '/chat/tara') : `/chat/coach/${id}`)} className="mt-2 h-11 w-full rounded-full bg-green-800 text-[15px] font-semibold text-white">
             {t('chatNow')}
           </button>
         </div>

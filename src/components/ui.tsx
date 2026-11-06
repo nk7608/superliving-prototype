@@ -179,7 +179,8 @@ export function StreakPill({ onClick }: { onClick?: () => void }) {
       onClick={onClick}
       className="flex h-[34px] items-center gap-1.5 rounded-full border-[1.5px] border-[#C9A13A] bg-streak-bg px-3 text-[13px] font-semibold text-streak-fg shadow-[0_0_10px_rgba(242,184,75,0.35)]"
     >
-      <span aria-hidden>🔥</span> {n === 1 ? t('streakPill1') : t('streakPill', { n })}
+      <motion.span key={n} initial={{ scale: n ? 1.6 : 1, rotate: n ? -12 : 0 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 400, damping: 12 }} aria-hidden>🔥</motion.span>
+      <motion.span key={`t${n}`} initial={{ y: n ? -6 : 0, opacity: n ? 0 : 1 }} animate={{ y: 0, opacity: 1 }}>{n === 1 ? t('streakPill1') : t('streakPill', { n })}</motion.span>
     </button>
   );
 }

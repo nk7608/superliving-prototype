@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { RotateCcw, ListChecks } from 'lucide-react';
+import { RotateCcw, ListChecks, ChevronDown } from 'lucide-react';
 import { useDemo } from '../app/DemoContext';
 import { screenByPath, screens } from '../app/screens';
 import type { PersonaId } from '../data/personas';
@@ -60,6 +60,7 @@ export function DemoControls({ vertical = false }: { vertical?: boolean }) {
       </div>
       <div>
         <Label>Jump to screen</Label>
+        <div className="relative">
         <select
           aria-label="Jump to screen"
           value={cur.path}
@@ -68,7 +69,7 @@ export function DemoControls({ vertical = false }: { vertical?: boolean }) {
             set({ selectedNoteId: null, ...(s?.persona ? { persona: s.persona } : {}) });
             navigate(e.target.value);
           }}
-          className={`h-9 rounded-full px-3 text-[12.5px] ${dark ? 'max-w-[190px] border border-white/20 bg-black/25 text-[#F1EFE7]' : 'w-full border border-[#D9D3BF] bg-[#FFFDF8] text-green-900'}`}
+          className={`h-9 appearance-none rounded-full pl-3.5 pr-9 text-[12.5px] ${dark ? 'max-w-[200px] border border-white/20 bg-black/25 text-[#F1EFE7]' : 'w-full border border-[#D9D3BF] bg-[#FFFDF8] text-green-900'}`}
         >
           {screens.map((s) => (
             <option key={s.id} value={s.path} className="text-green-900">
@@ -76,6 +77,8 @@ export function DemoControls({ vertical = false }: { vertical?: boolean }) {
             </option>
           ))}
         </select>
+          <ChevronDown size={15} className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 ${dark ? 'text-[#F1EFE7]/80' : 'text-green-900/70'}`} aria-hidden />
+        </div>
       </div>
       <div className={vertical ? 'flex gap-2 pt-1' : 'flex gap-1'}>
         <button type="button" onClick={() => navigate('/changes')} className={`flex h-9 items-center gap-1.5 rounded-full px-3 text-[12.5px] font-medium ${dark ? 'text-[#F1EFE7]/85 hover:bg-white/10' : 'border border-[#D9D3BF] text-green-900'}`}>

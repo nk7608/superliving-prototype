@@ -9,10 +9,17 @@ import { StepCard, StreakSheet } from '../components/StepCard';
 export function Ring({ value, total, size = 46 }: { value: number; total: number; size?: number }) {
   const r = size / 2 - 4;
   const c = 2 * Math.PI * r;
+  // fill from empty on first paint, so progress is felt, not just read
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    const id = window.setTimeout(() => setShown(value), 120);
+    return () => clearTimeout(id);
+  }, [value]);
+  value = shown;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden>
       <circle cx={size / 2} cy={size / 2} r={r} stroke="#E7E3D6" strokeWidth="4.5" fill="none" />
-      <circle cx={size / 2} cy={size / 2} r={r} stroke="#38592D" strokeWidth="4.5" fill="none" strokeLinecap="round" strokeDasharray={`${(c * value) / total} ${c}`} transform={`rotate(-90 ${size / 2} ${size / 2})`} style={{ transition: 'stroke-dasharray .6s' }} />
+      <circle cx={size / 2} cy={size / 2} r={r} stroke="#38592D" strokeWidth="4.5" fill="none" strokeLinecap="round" strokeDasharray={`${(c * value) / total} ${c}`} transform={`rotate(-90 ${size / 2} ${size / 2})`} style={{ transition: 'stroke-dasharray 1s cubic-bezier(.2,.8,.2,1)' }} />
     </svg>
   );
 }

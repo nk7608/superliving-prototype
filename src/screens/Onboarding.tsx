@@ -226,6 +226,9 @@ export function OnboardingFlow({ variant = 'neha', onDone }: { variant?: 'neha' 
             <div className="rounded-[18px] border border-white/20 bg-green-tile p-3.5">
               <div className="flex items-center justify-between">
                 <h2 className="text-[17px] font-semibold">{t('onbUnderstood')}</h2>
+                <motion.span key={shown} initial={{ scale: 1.4 }} animate={{ scale: 1 }} className="rounded-full bg-green-cta-light px-2.5 py-[2px] text-[12.5px] font-bold text-[#163015]">
+                  ✨ {Math.min(shown, chips.length)}
+                </motion.span>
               </div>
               <div className="mt-2.5 flex flex-wrap gap-2">
                 <AnimatePresence>

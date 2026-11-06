@@ -19,6 +19,7 @@ import { RohitChat } from '../screens/RohitChat';
 import { Together } from '../screens/Together';
 import { Day30 } from '../screens/Day30';
 import { Courses } from '../screens/Courses';
+import { CoachChat } from '../screens/CoachChat';
 
 export function App() {
   return (
@@ -38,6 +39,8 @@ export function App() {
               <Route path="/me" element={<TaraChat key="me" mode="me" />} />
               <Route path="/report" element={<TaraChat key="report" mode="report" />} />
               <Route path="/chat/dev" element={<DevChat />} />
+              <Route path="/chat/coach/:id" element={<CoachChat />} />
+              <Route path="/chat/coach" element={<Navigate to="/chat/coach/rashmi" />} />
               <Route path="/tv" element={<SuperTV />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/invite" element={<Invite />} />

@@ -2,7 +2,7 @@ import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { useDemo } from '../app/DemoContext';
-import { screenByPath } from '../app/screens';
+import { effectiveScreen } from '../app/screens';
 import { notesForScreen } from '../data/notes';
 
 /** Scroll only the nearest scrolling ancestor (never the page or the phone frame). */
@@ -41,7 +41,7 @@ export function Anchor({
 }) {
   const { state, selectNote } = useDemo();
   const loc = useLocation();
-  const list = notesForScreen(screenByPath(loc.pathname).id);
+  const list = notesForScreen(effectiveScreen(loc.pathname, state.persona).id);
   const idx = list.findIndex((n) => n.anchor === id);
   const note = idx >= 0 ? list[idx] : undefined;
   const selected = state.notesOn && !!note && state.selectedNoteId === note.id;

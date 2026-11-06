@@ -1,3 +1,4 @@
+import { CountUp } from '../components/motion';
 import { Avatar } from '../components/Avatar';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +29,7 @@ export function Day30() {
             <div className="flex items-center gap-4">
               <Ring value={done} total={30} size={86} />
               <div>
-                <div className="text-[28px] font-bold leading-none text-text-primary">{done}/30</div>
+                <div className="text-[28px] font-bold leading-none text-text-primary"><CountUp to={done} />/30</div>
                 <div className="mt-1 text-[15px] text-text-secondary">{t('d30Days')}</div>
               </div>
             </div>
