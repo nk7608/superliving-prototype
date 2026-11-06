@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: #F6F7FB;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.phone-viewport { --sat: 54px; --sab: 28px; }
+.mobile-viewport { --sat: env(safe-area-inset-top, 0px); --sab: env(safe-area-inset-bottom, 0px); }
+
+/* App surface uses Poppins (§6.3) */
+#app-viewport { font-family: 'Poppins', system-ui, sans-serif; color: #233A1D; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+/* Visible keyboard focus (§14 checklist) */
+:focus-visible { outline: 2px solid #3B4CCA; outline-offset: 2px; }
+
+/* Extends the tap target of small chips to >= 44px without changing their look */
+.hit { position: relative; }
+.hit::after { content: ''; position: absolute; inset: -8px -4px; }
+
+/* ── Explainer layer (§7.1) ── */
+.note-marker {
+  position: absolute;
+  z-index: 40;
+  width: 22px; height: 22px;
+  border-radius: 9999px;
+  font: 700 12px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(59, 76, 202, 0.45);
+  cursor: pointer;
+}
+.note-marker::after { content: ''; position: absolute; inset: -11px; } /* 44px tap target */
+.note-selected {
+  outline: 2px solid #3B4CCA;
+  outline-offset: 3px;
+  border-radius: 14px;
+  animation: note-pulse 600ms ease-out 1;
+}
+@keyframes note-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(59, 76, 202, 0.55); }
+  100% { box-shadow: 0 0 0 12px rgba(59, 76, 202, 0); }
+}
+
+/* Chat background with faint doodles (ref 12) */
+.chat-doodles {
+  background-color: #E5E3DC;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160' fill='none' stroke='%23C9C5B8' stroke-width='1.4' opacity='0.55'%3E%3Ccircle cx='24' cy='26' r='9'/%3E%3Cpath d='M18 26h12M24 20v12'/%3E%3Crect x='96' y='18' width='22' height='16' rx='3'/%3E%3Cpath d='M100 34v6M114 34v6'/%3E%3Cpath d='M58 92c6-10 18-10 24 0'/%3E%3Cpath d='M130 96l8 12h-16z'/%3E%3Cpath d='M22 120c4-8 12-8 16 0s12 8 16 0'/%3E%3Ccircle cx='106' cy='138' r='6'/%3E%3Cpath d='M70 40l6 6-6 6-6-6z'/%3E%3C/svg%3E");
+}
+
+.waveform span { animation: wave 900ms ease-in-out infinite; }
+@keyframes wave { 0%,100% { transform: scaleY(0.35); } 50% { transform: scaleY(1); } }
+
+.shimmer { background: linear-gradient(90deg, #EEE 0%, #F7F7F7 50%, #EEE 100%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+.typing-dot { animation: blink 1.2s infinite both; }
+.typing-dot:nth-child(2) { animation-delay: .2s; }
+.typing-dot:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
