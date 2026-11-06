@@ -3,6 +3,7 @@ import { RotateCcw, ListChecks } from 'lucide-react';
 import { useDemo } from '../app/DemoContext';
 import { screenByPath, screens } from '../app/screens';
 import type { PersonaId } from '../data/personas';
+import { Avatar } from '../components/Avatar';
 
 function Seg<T extends string>({ value, options, onChange, label, dark = true }: { value: T; options: { v: T; l: string }[]; onChange: (v: T) => void; label: string; dark?: boolean }) {
   return (
@@ -47,7 +48,11 @@ export function DemoControls({ vertical = false }: { vertical?: boolean }) {
       </div>
       <div>
         <Label>Whose phone</Label>
-        <Seg<PersonaId> dark={dark} label="Persona" value={state.persona} onChange={(v) => set({ persona: v, selectedNoteId: null })} options={[{ v: 'neha', l: 'Neha' }, { v: 'rohit', l: 'Rohit' }]} />
+        <Seg<PersonaId> dark={dark} label="Persona" value={state.persona} onChange={(v) => {
+          // A persona switch is a deliberate detour: leave the scripted tour so it sticks.
+          if (state.tourActive) exitTour();
+          set({ persona: v, selectedNoteId: null });
+        }} options={[{ v: 'neha', l: 'Neha' }, { v: 'rohit', l: 'Rohit' }]} />
       </div>
       <div>
         <Label>App language</Label>
@@ -84,14 +89,29 @@ export function DemoControls({ vertical = false }: { vertical?: boolean }) {
   );
 }
 
+/** Whose phone you're looking at — the clearest signal that the persona switch worked. */
+export function PhoneOwner({ light = false, short = false }: { light?: boolean; short?: boolean }) {
+  const { state } = useDemo();
+  const name = state.persona === 'rohit' ? 'Rohit' : 'Neha';
+  return (
+    <span className={`flex items-center gap-1.5 rounded-full py-[3px] pl-[3px] pr-2.5 text-[12px] font-medium ${light ? 'bg-[#FFFDF8] text-green-900' : 'bg-white/10 text-[#F1EFE7]'}`}>
+      <Avatar who={state.persona} size={22} />
+      {short ? name : `${name}’s phone`}
+    </span>
+  );
+}
+
 export function DemoBar() {
   const navigate = useNavigate();
   return (
     <header className="flex min-h-[56px] shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-2 bg-green-900 px-5 py-2.5">
-      <button type="button" onClick={() => navigate('/')} className="flex items-baseline gap-2 text-left">
-        <span className="text-[20px] font-bold tracking-[-0.3px] text-green-300">SuperLiving</span>
-        <span className="hidden text-[13px] text-[#F1EFE7]/70 lg:inline">90-day add-ons · prototype</span>
-      </button>
+      <div className="flex items-center gap-3">
+        <button type="button" onClick={() => navigate('/')} className="flex items-baseline gap-2 text-left">
+          <span className="text-[20px] font-bold tracking-[-0.3px] text-green-300">SuperLiving</span>
+          <span className="hidden text-[13px] text-[#F1EFE7]/70 xl:inline">90-day add-ons</span>
+        </button>
+        <PhoneOwner />
+      </div>
       <DemoControls />
     </header>
   );

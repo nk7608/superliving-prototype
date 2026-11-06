@@ -53,9 +53,9 @@ export function Anchor({
 
   const roadmap = note?.tag === 'Roadmap';
   return (
-    <div ref={ref} data-note-anchor={id} className={`relative ${selected ? 'note-selected' : ''} ${className}`} style={style}>
+    <div ref={ref} data-note-anchor={id} className={`relative ${className}`} style={style}>
       {children}
-      {state.notesOn && note && (
+      {state.notesOn && !state.tourActive && note && (
         <motion.button
           type="button"
           initial={{ scale: 0, y: inset ? '-50%' : 0 }}

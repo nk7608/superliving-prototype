@@ -27,33 +27,40 @@ export const chapters = [
 ];
 
 export const tour: TourStep[] = [
-  { chapter: 1, path: '/', caption: 'SuperLiving already has coaches, videos, trackers and lab tests. These add-ons connect them.' },
+  { chapter: 1, path: '/', caption: 'SuperLiving already has the parts. These add-ons connect them. Follow Neha for five minutes.' },
 
-  { chapter: 2, path: '/onboarding', persona: 'neha', noteId: 'F0-onboarding', action: 'onb-speak', caption: 'Neha, 34, from Kanpur, describes herself once. The app turns her words into facts she can check.' },
-  { chapter: 2, path: '/onboarding', persona: 'neha', noteId: 'F0-consent', action: 'onb-answer', caption: 'Two taps fill the gaps (chai time, who it’s for). She chooses to get WhatsApp reminders.' },
+  { chapter: 2, path: '/onboarding', persona: 'neha', noteId: 'F0-onboarding', action: 'onb-speak', caption: 'Neha says who she is, once. No forms, no tiles.' },
+  { chapter: 2, path: '/onboarding', persona: 'neha', noteId: 'F0-consent', action: 'onb-answer', caption: 'Two taps fill the gaps. Reminders only because she said yes.' },
 
-  { chapter: 3, path: '/home', persona: 'neha', noteId: 'F3-step', needs: ['onboarded'], caption: 'Home now leads with one small step for today, built from what she said, with the reason shown.' },
-  { chapter: 3, path: '/home', persona: 'neha', noteId: 'F8-stories', action: 'scroll-stories', needs: ['onboarded'], caption: 'Further down, short stories from families like hers replace a single anonymous quote.' },
-  { chapter: 3, path: '/whatsapp', persona: 'neha', noteId: 'F3-whatsapp', action: 'wa-run', needs: ['onboarded'], caption: 'Next morning at chai time, a private reminder. One reply marks the step done.' },
-  { chapter: 3, path: '/health', persona: 'neha', noteId: 'F3-ring', action: 'open-streak', needs: ['onboarded', 'stepDone'], caption: 'Back in the app, the ring and the streak both show 1 day. They now count the same thing.' },
-  { chapter: 3, path: '/meal', persona: 'neha', noteId: 'F6-usual', action: 'meal-usual', needs: ['onboarded'], caption: 'Breakfast is the usual poha and chai, logged in one tap.' },
+  { chapter: 3, path: '/home', persona: 'neha', noteId: 'F3-step', needs: ['onboarded'], caption: 'What she said becomes one small step for today.' },
+  { chapter: 3, path: '/home', persona: 'neha', noteId: 'F8-stories', action: 'scroll-stories', needs: ['onboarded'], caption: 'Proof from families like hers, labelled honestly.' },
+  { chapter: 3, path: '/whatsapp', persona: 'neha', noteId: 'F3-whatsapp', action: 'wa-run', needs: ['onboarded'], caption: 'Next morning, at chai time: one tap in WhatsApp marks the step done.' },
+  { chapter: 3, path: '/health', persona: 'neha', noteId: 'F3-ring', needs: ['onboarded', 'stepDone'], caption: 'That tap shows up here. Ring and streak now count the same day.' },
+  { chapter: 3, path: '/meal', persona: 'neha', noteId: 'F6-usual', needs: ['onboarded'], caption: 'Her usual breakfast logs in one tap. Try the chip.' },
 
-  { chapter: 4, path: '/experts', persona: 'neha', noteId: 'F2-tara-card', needs: ['onboarded'], caption: 'Tara leads, because she already knows Neha. Every coach is labelled as AI.' },
-  { chapter: 4, path: '/chat/tara', persona: 'neha', noteId: 'F1-chip', action: 'intent-act', needs: ['onboarded'], caption: 'Neha asks Tara to help her act. Each new thing Tara learns is saved, visibly.' },
-  { chapter: 4, path: '/me', persona: 'neha', noteId: 'F1-source', needs: ['onboarded'], caption: 'All of it lands in one Me card that every coach reads, with the source of each fact.' },
+  { chapter: 4, path: '/experts', persona: 'neha', noteId: 'F2-tara-card', needs: ['onboarded'], caption: 'Tara leads, because she already knows Neha.' },
+  { chapter: 4, path: '/chat/tara', persona: 'neha', noteId: 'F1-chip', action: 'intent-act', needs: ['onboarded'], caption: 'Neha asks for help. Each new fact Tara learns is saved in plain sight.' },
+  { chapter: 4, path: '/me', persona: 'neha', noteId: 'F1-source', needs: ['onboarded'], caption: 'All of it lives on one card that every coach reads.' },
 
-  { chapter: 5, path: '/report', persona: 'neha', noteId: 'F4-nextsteps', action: 'report-upload', needs: ['onboarded'], caption: 'She uploads her blood report, sees it progress, and gets a free plan: what matters and what to do.' },
-  { chapter: 5, path: '/report', persona: 'neha', noteId: 'F4-review', action: 'report-review', needs: ['onboarded', 'report'], caption: 'Low values go to a registered dietitian, who signs off with a short note.' },
-  { chapter: 5, path: '/chat/dev', persona: 'neha', noteId: 'F2-context', needs: ['onboarded', 'report'], caption: 'Tara brings in Dev for her hair. He opens with what he already knows, so she repeats nothing.' },
+  { chapter: 5, path: '/report', persona: 'neha', noteId: 'F4-nextsteps', action: 'report-upload', needs: ['onboarded'], caption: 'Her blood report becomes three clear next steps, free.' },
+  { chapter: 5, path: '/report', persona: 'neha', noteId: 'F4-review', action: 'report-review', needs: ['onboarded', 'report'], caption: 'Anything out of range is checked by a real dietitian.' },
+  { chapter: 5, path: '/chat/dev', persona: 'neha', noteId: 'F2-context', needs: ['onboarded', 'report'], caption: 'Dev joins for her hair, already knowing her report.' },
 
-  { chapter: 6, path: '/tv', persona: 'neha', noteId: 'F5-pick', action: 'tv-watch', needs: ['onboarded'], caption: 'SuperTV suggests one unlocked video, for a reason that fits her: she fasts on Tuesdays.' },
-  { chapter: 6, path: '/profile', persona: 'neha', noteId: 'F7-preview', action: 'open-checkins', needs: ['onboarded'], caption: 'She decides when and how reminders come, and what the lock screen may show.' },
-  { chapter: 6, path: '/profile', persona: 'neha', noteId: 'F9d-cancel', action: 'open-price-subscriber', needs: ['onboarded'], caption: 'Every plan and price is on one card, with a renewal reminder and a one-tap cancel.' },
+  { chapter: 6, path: '/tv', persona: 'neha', noteId: 'F5-pick', needs: ['onboarded'], caption: 'One unlocked video, picked because she fasts on Tuesdays.' },
+  { chapter: 6, path: '/profile', persona: 'neha', noteId: 'F7-preview', action: 'open-checkins', needs: ['onboarded'], caption: 'She decides when reminders come and what the lock screen shows.' },
+  { chapter: 6, path: '/profile', persona: 'neha', noteId: 'F9d-cancel', action: 'open-price-subscriber', needs: ['onboarded'], caption: 'Every price on one card. A renewal reminder and one-tap cancel.' },
 
-  { chapter: 7, path: '/invite', persona: 'neha', noteId: 'F10-prefill', action: 'invite-flow', needs: ['onboarded'], caption: 'Neha invites her husband Rohit. His setup starts with the household kitchen already filled in.' },
-  { chapter: 7, path: '/rohit-chat', persona: 'rohit', noteId: 'F11-listen', action: 'rohit-voice-listen', needs: ['onboarded', 'rohitOnboarded'], caption: '9:40 pm, after a hard day. Rohit asks Tara just to listen, and she does.' },
-  { chapter: 7, path: '/rohit-chat', persona: 'rohit', noteId: 'F11-safety', action: 'safety', needs: ['onboarded', 'rohitOnboarded'], caption: 'If crisis words ever appear, coaching stops and real people step in.' },
+  { chapter: 7, path: '/invite', persona: 'neha', noteId: 'F10-prefill', action: 'invite-flow', needs: ['onboarded'], caption: 'Neha invites Rohit. Their kitchen is already filled in.' },
+  { chapter: 7, path: '/rohit-chat', persona: 'rohit', noteId: 'F11-listen', action: 'rohit-voice-listen', needs: ['onboarded', 'rohitOnboarded'], caption: '9:40 pm. Rohit asks Tara just to listen, and she does.' },
+  { chapter: 7, path: '/rohit-chat', persona: 'rohit', noteId: 'F11-safety', action: 'safety', needs: ['onboarded', 'rohitOnboarded'], caption: 'If crisis words appear, coaching stops and people step in.' },
 
-  { chapter: 8, path: '/together', persona: 'neha', noteId: 'F12-roadmap', action: 'roadmap', needs: ['onboarded'], caption: 'Today she can join a live class. Next on the roadmap: local groups like a Kanpur walking club.' },
-  { chapter: 8, path: '/day30', persona: 'neha', noteId: 'HITL-plateau', needs: ['onboarded', 'stepDone', 'report'], caption: 'Day 30: 21 days done, a retest date, and a dietitian steps in at the plateau. Next: every change in one list.' },
+  { chapter: 8, path: '/together', persona: 'neha', noteId: 'F12-roadmap', action: 'roadmap', needs: ['onboarded'], caption: 'Today: a live class together. Next: local walking groups.' },
+  { chapter: 8, path: '/day30', persona: 'neha', noteId: 'HITL-plateau', needs: ['onboarded', 'stepDone', 'report'], caption: 'Day 30: 21 days done, retest booked, a dietitian at the plateau.' },
 ];
+
+/** Which chapter each screen belongs to (for the story map). */
+export const chapterOfScreen: Record<string, number> = {
+  S0: 1, S1: 2, S2: 3, S3: 3, S4: 3, S5: 3, S6: 4, S7: 4, S8: 4, S9: 5, S10: 5,
+  S11: 6, S12: 6, S13: 7, S14: 7, S15: 8, S16: 8, COURSES: 3, S17: 8, INDEX: 6,
+};
+export const firstStepOfChapter = (c: number) => Math.max(0, tour.findIndex((t) => t.chapter === c));

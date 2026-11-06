@@ -63,7 +63,7 @@ function CourseCard({ title, chips, reviews, old, price, art, artBg }: { title: 
 }
 
 export function Home() {
-  const { t } = useDemo();
+  const { t, state } = useDemo();
   const [streak, setStreak] = useState(false);
   const [price, setPrice] = useState(false);
   const [who, setWho] = useState(false);
@@ -74,11 +74,13 @@ export function Home() {
   useAction('open-price', () => setPrice(true));
   useAction('open-streak', () => setStreak(true));
 
-  const stories = [
+  const storiesAll = [
     { n: t('story1'), q: t('story1q'), tag: t('story1t'), bg: 'linear-gradient(170deg,#C9673A,#7A2E1F)', who: 'sunita' as const },
     { n: t('story2'), q: t('story2q'), tag: t('story2t'), bg: 'linear-gradient(170deg,#3F6E8C,#1F3346)', who: 'imran' as const },
     { n: t('story3'), q: t('story3q'), tag: t('story3t'), bg: 'linear-gradient(170deg,#4E7A45,#22391D)', who: 'kavya' as const },
   ];
+  // Matched to whoever's phone it is: Rohit sees the stress/sugar story first.
+  const stories = state.persona === 'rohit' ? [storiesAll[1], storiesAll[0], storiesAll[2]] : storiesAll;
 
   return (
     <div className="absolute inset-0 flex flex-col bg-cream-bg">

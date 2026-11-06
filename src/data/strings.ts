@@ -557,3 +557,10 @@ add({
   transcriptRohit: [_rohit.transcript, 'I’m Rohit, Neha’s husband. I work at a bank. After office I feel very tired and tense, I don’t sleep well, and my belly is growing.'],
   rohitVoiceNote: [_rohit.eveningVoiceNote, 'There was a lot of pressure at the office today. I don’t feel like doing anything after coming home.'],
 });
+
+// ── Rohit's own usual meal ──
+add({
+  usualOffice: ['Chai + 2 biscuit (office)', 'Chai + 2 biscuits (office)'],
+  mealOffice: 'Chai + biscuit', mealOfficeP: ['1 cup chai · 2 biscuit', '1 cup chai · 2 biscuits'],
+  mealOfficeTip: ['Office ki chai ke saath biscuit ki jagah mutthi bhar bhuna chana lein — pet bhara rahega.', 'Swap the biscuits for a handful of roasted chana with your office chai — keeps you full longer.'],
+});

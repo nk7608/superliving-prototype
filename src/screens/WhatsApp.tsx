@@ -92,13 +92,12 @@ export function WhatsApp() {
           {t('waMsg', { step: t('stepNeha0') })}
           <div className="mt-1 text-right text-[11px] text-[#667781]">{time} am</div>
         </div>
+        <Anchor id="wa-replies" className="space-y-2">
         {!reply ? (
-          <Anchor id="wa-replies">
             <div className="flex max-w-[85%] gap-2">
               <button type="button" onClick={() => answer('done')} className="h-11 flex-1 rounded-lg bg-white text-[15px] font-semibold text-[#008069] shadow-sm">{t('waDone')}</button>
               <button type="button" onClick={() => answer('skip')} className="h-11 flex-1 rounded-lg bg-white text-[15px] font-semibold text-[#008069] shadow-sm">{t('stepSkip')}</button>
             </div>
-          </Anchor>
         ) : (
           <>
             <div className="ml-auto max-w-[70%] rounded-lg rounded-tr-none bg-[#D9FDD3] px-3 py-2 text-[15px] text-[#111B21] shadow-sm">
@@ -113,6 +112,7 @@ export function WhatsApp() {
             </motion.div>
           </>
         )}
+        </Anchor>
       </div>
       <div className="flex items-center gap-2 bg-[#F0F2F5] px-2 pt-2" style={{ paddingBottom: 'calc(var(--sab) + 8px)' }}>
         <div className="flex h-11 flex-1 items-center gap-3 rounded-full bg-white px-3 text-[#8696A0]">

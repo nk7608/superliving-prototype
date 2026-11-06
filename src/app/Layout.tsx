@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, SlidersHorizontal, Sparkles } from 'lucide-react';
+import { X, SlidersHorizontal, Map, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useDemo } from './DemoContext';
 import { screenByPath } from './screens';
-import { DemoBar, DemoControls } from '../notes/DemoBar';
+import { DemoBar, DemoControls, PhoneOwner } from '../notes/DemoBar';
 import { NotesPanel } from '../notes/NotesPanel';
-import { TourBar, useKeyboardShortcuts } from '../notes/TourController';
+import { TourBar, useKeyboardShortcuts, useTourNav } from '../notes/TourController';
+import { Guide } from '../notes/Guide';
+import { chapterOfScreen, chapters, tour } from '../data/tour';
 import { noteById, notesForScreen } from '../data/notes';
 import { PHONE } from '../styles/tokens';
 
@@ -58,6 +60,7 @@ function PhoneFrame({ children }: { children: ReactNode }) {
           <StatusBar />
           <div className="pointer-events-none absolute left-1/2 top-[11px] z-[70] h-[34px] w-[122px] -translate-x-1/2 rounded-full bg-black" aria-hidden />
           {children}
+          <Guide />
           <div className="pointer-events-none absolute bottom-[8px] left-1/2 z-[70] h-[5px] w-[134px] -translate-x-1/2 rounded-full bg-black/80" aria-hidden />
         </div>
       </div>
@@ -65,48 +68,64 @@ function PhoneFrame({ children }: { children: ReactNode }) {
   );
 }
 
-/** Mobile: a slim brand bar on top (never covers the app) + notes/controls as bottom sheets. */
+/** Compact tour controls for places without the in-app guide (intro, all changes, notes off). */
+function MiniTour() {
+  const { next, back, step, total } = useTourNav();
+  return (
+    <div className="flex items-center gap-1 rounded-full bg-green-900 p-1 text-[#F1EFE7] shadow-lg">
+      <button type="button" onClick={back} disabled={step === 0} className="flex h-9 w-9 items-center justify-center rounded-full disabled:opacity-30" aria-label="Previous step"><ChevronLeft size={18} /></button>
+      <span className="px-1 text-[12px] font-medium">{step + 1}/{total}</span>
+      <button type="button" onClick={next} className="flex h-9 items-center gap-1 rounded-full bg-mustard px-3 text-[13px] font-semibold text-green-900" aria-label="Next step">Next <ChevronRight size={16} /></button>
+    </div>
+  );
+}
+
+/** Mobile: one slim bar on top; the app below is never covered except by the guide. */
 function MobileShell({ children, inPhone }: { children: ReactNode; inPhone: boolean }) {
   const { state } = useDemo();
   const loc = useLocation();
-  const [sheet, setSheet] = useState<null | 'notes' | 'controls'>(null);
+  const [sheet, setSheet] = useState<null | 'story' | 'controls'>(null);
   const s = screenByPath(loc.pathname);
   const count = notesForScreen(s.id).length;
-  const first = useRef(true);
-  const name = s.label.replace(/^S\d+ · /, '').replace(/^Courses tab.*/, 'Courses');
+  const chapter = state.tourActive ? tour[state.tourStep]?.chapter ?? 1 : chapterOfScreen[s.id] ?? 1;
 
-  useEffect(() => {
-    // A tapped pin opens its note — but not a leftover selection on first render.
-    if (first.current) {
-      first.current = false;
-      return;
-    }
-    // During the tour the caption explains the step; notes open only when asked.
-    if (state.selectedNoteId && state.notesOn && !state.tourActive) setSheet('notes');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.selectedNoteId, state.notesOn]);
+  useEffect(() => setSheet(null), [loc.pathname]);
 
   return (
     <div className={`flex h-[100dvh] flex-col bg-[#F1EFE7] ${state.notesOn ? 'notes-on' : 'notes-off'}`}>
       <div className="shrink-0 bg-green-900 text-[#F1EFE7]" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-        <div className="flex h-12 items-center gap-2 px-3">
-          <span className="shrink-0 rounded-full bg-white/10 px-2 py-[3px] text-[11px] font-semibold uppercase tracking-[0.08em] text-green-300">Pitch</span>
-          <span className="min-w-0 flex-1 truncate text-[13px] font-medium text-[#F1EFE7]/85">{inPhone ? name : 'SuperLiving add-ons'}</span>
+        <div className="flex h-12 items-center gap-2 pl-2 pr-1">
+          <PhoneOwner short />
+          <button type="button" onClick={() => setSheet('story')} className="flex min-w-0 flex-1 items-center gap-2 rounded-full px-2 py-1 text-left hover:bg-white/10" aria-label="Open the story map">
+            <span className="flex shrink-0 gap-[3px]" aria-hidden>
+              {chapters.map((c, i) => (
+                <span key={c} className={`h-1.5 rounded-full ${i + 1 === chapter ? 'w-3.5 bg-mustard' : i + 1 < chapter ? 'w-1.5 bg-mustard/60' : 'w-1.5 bg-white/25'}`} />
+              ))}
+            </span>
+            <span className="truncate text-[12.5px] text-[#F1EFE7]/85">{chapters[chapter - 1]}</span>
+          </button>
           {inPhone && state.notesOn && count > 0 && (
-            <button type="button" onClick={() => setSheet('notes')} className="flex h-9 items-center gap-1.5 rounded-full bg-mustard px-3 text-[13px] font-semibold text-green-900">
-              <Sparkles size={14} /> {count} changes
+            <button type="button" onClick={() => setSheet('story')} className="flex h-8 shrink-0 items-center gap-1 rounded-full bg-mustard px-2.5 text-[12.5px] font-semibold text-green-900">
+              <Map size={14} /> {count}
             </button>
           )}
-          <button type="button" onClick={() => setSheet('controls')} className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/10" aria-label="Demo settings">
+          <button type="button" onClick={() => setSheet('controls')} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10" aria-label="Demo settings">
             <SlidersHorizontal size={18} />
           </button>
         </div>
-        {state.tourActive && <TourBar dense />}
       </div>
       {inPhone ? (
-        <div id="app-viewport" className="mobile-viewport relative min-h-0 w-full flex-1 overflow-hidden bg-cream-bg">{children}</div>
+        <div id="app-viewport" className="mobile-viewport relative min-h-0 w-full flex-1 overflow-hidden bg-cream-bg">
+          {children}
+          <Guide />
+        </div>
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
+      )}
+      {state.tourActive && (!inPhone || !state.notesOn) && (
+        <div className="fixed inset-x-0 bottom-0 z-[200] px-3" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
+          {inPhone ? <div className="flex justify-end"><MiniTour /></div> : <div className="overflow-hidden rounded-2xl shadow-xl"><TourBar dense /></div>}
+        </div>
       )}
       <AnimatePresence>
         {sheet && (
@@ -120,17 +139,15 @@ function MobileShell({ children, inPhone }: { children: ReactNode; inPhone: bool
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 32, stiffness: 320 }}
               role="dialog"
-              aria-label={sheet === 'notes' ? 'What changed here' : 'Demo settings'}
+              aria-label={sheet === 'story' ? 'The story' : 'Demo settings'}
             >
-              <div className="flex shrink-0 items-center justify-between px-4 pb-1 pt-3">
-                <span className="mx-auto h-1 w-10 rounded-full bg-black/15" />
-              </div>
-              <button type="button" onClick={() => setSheet(null)} className="absolute right-3 top-2 flex h-10 w-10 items-center justify-center rounded-full bg-black/5" aria-label="Close">
+              <div className="flex shrink-0 justify-center pb-1 pt-3"><span className="h-1 w-10 rounded-full bg-black/15" /></div>
+              <button type="button" onClick={() => setSheet(null)} className="absolute right-3 top-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/5" aria-label="Close">
                 <X size={18} />
               </button>
               <div className="min-h-0 flex-1 overflow-hidden">
-                {sheet === 'notes' ? (
-                  <NotesPanel compact />
+                {sheet === 'story' ? (
+                  <NotesPanel compact onPick={() => setSheet(null)} />
                 ) : (
                   <div className="overflow-y-auto px-4 pb-6 pt-2">
                     <h2 className="mb-3 text-[18px] font-semibold text-green-900">Demo settings</h2>
@@ -198,17 +215,16 @@ export function Layout({ children }: { children: ReactNode }) {
         <main className="flex min-w-0 flex-1 items-center justify-center p-4">
           <PhoneFrame>{children}</PhoneFrame>
         </main>
-        {(state.notesOn || state.tourActive) && (
-          <aside className="w-[400px] shrink-0 border-l border-[#E4DFCF]" aria-label="What changed here">
-            {state.notesOn ? (
-              <NotesPanel />
-            ) : (
-              <div className="h-full bg-[#F1EFE7]">
-                <TourBar />
-                <p className="p-4 text-[14px] text-[#5E5D58]">Notes are off — this is the app exactly as users would see it. Press N to bring them back.</p>
-              </div>
-            )}
+        {state.notesOn ? (
+          <aside className="w-[340px] shrink-0 border-l border-[#E4DFCF]" aria-label="The story">
+            <NotesPanel />
           </aside>
+        ) : (
+          state.tourActive && (
+            <div className="fixed bottom-5 right-5 z-[200]">
+              <MiniTour />
+            </div>
+          )
         )}
       </div>
     </div>

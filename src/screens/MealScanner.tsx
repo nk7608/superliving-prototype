@@ -17,6 +17,7 @@ export function MealScanner() {
   const meals: Record<string, Meal> = {
     poha: { id: 'poha', name: t('mealPoha'), portions: t('mealPohaP'), kcal: 310, p: 7.2, c: 52.4, f: 8.1, tip: t('mealPohaTip'), type: t('breakfast'), emoji: '☕', time: '08:52 AM' },
     lunch: { id: 'lunch', name: t('mealLunch'), portions: t('mealLunchP'), kcal: 420, p: 15.6, c: 64.0, f: 10.8, tip: t('mealLunchTip'), type: t('lunch'), emoji: '🍛', time: '01:20 PM' },
+    office: { id: 'office', name: t('mealOffice'), portions: t('mealOfficeP'), kcal: 190, p: 3.4, c: 28.0, f: 7.2, tip: t('mealOfficeTip'), type: t('snack'), emoji: '☕', time: '04:30 PM' },
     voice: { id: 'voice', name: t('mealVoice'), portions: t('mealVoiceP'), kcal: 310, p: 11.8, c: 48.5, f: 7.0, tip: t('mealLunchTip'), type: t('lunch'), emoji: '🫓', time: '01:24 PM' },
   };
   const log = (id: string) => {
@@ -67,9 +68,15 @@ export function MealScanner() {
               <div>
                 <div className="text-[14px] font-semibold text-[#1D1D1B]">{t('usualTitle')}</div>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <button type="button" onClick={() => log('poha')} className="flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#CFE3C8] bg-green-50 px-3.5 text-[14px] font-medium text-green-700">
-                    ☕ {t('usualPoha')}
-                  </button>
+                  {state.persona === 'rohit' ? (
+                    <button type="button" onClick={() => log('office')} className="flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#CFE3C8] bg-green-50 px-3.5 text-[14px] font-medium text-green-700">
+                      ☕ {t('usualOffice')}
+                    </button>
+                  ) : (
+                    <button type="button" onClick={() => log('poha')} className="flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#CFE3C8] bg-green-50 px-3.5 text-[14px] font-medium text-green-700">
+                      ☕ {t('usualPoha')}
+                    </button>
+                  )}
                   <button type="button" onClick={() => log('lunch')} className="flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#CFE3C8] bg-green-50 px-3.5 text-[14px] font-medium text-green-700">
                     🍛 {t('usualLunch')}
                   </button>
