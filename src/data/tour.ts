@@ -32,8 +32,8 @@ export const tour: TourStep[] = [
   { path: '/profile', persona: 'neha', noteId: 'F7-preview', action: 'open-checkins', needs: ['onboarded'], caption: 'Neha controls when, where and how check-ins arrive.' },
   { path: '/profile', persona: 'neha', noteId: 'F9d-cancel', action: 'open-price-subscriber', needs: ['onboarded'], caption: 'One price card, a renewal reminder and one-tap cancel.' },
   { path: '/invite', persona: 'neha', noteId: 'F10-prefill', action: 'invite-flow', needs: ['onboarded'], caption: 'Neha invites Rohit. His onboarding starts with the household filled in.' },
-  { path: '/rohit-chat', persona: 'rohit', noteId: 'F11-listen', action: 'rohit-voice-listen', needs: ['onboarded'], caption: '9:40 pm. Rohit sends a voice note and asks Tara just to listen.' },
-  { path: '/rohit-chat', persona: 'rohit', noteId: 'F11-safety', action: 'safety', needs: ['onboarded'], caption: 'If crisis language appears, coaching stops and people step in.' },
+  { path: '/rohit-chat', persona: 'rohit', noteId: 'F11-listen', action: 'rohit-voice-listen', needs: ['onboarded', 'rohitOnboarded'], caption: '9:40 pm. Rohit sends a voice note and asks Tara just to listen.' },
+  { path: '/rohit-chat', persona: 'rohit', noteId: 'F11-safety', action: 'safety', needs: ['onboarded', 'rohitOnboarded'], caption: 'If crisis language appears, coaching stops and people step in.' },
   { path: '/together', persona: 'neha', noteId: 'F12-roadmap', action: 'roadmap', needs: ['onboarded'], caption: 'Do it together now; find your people next (roadmap).' },
   { path: '/day30', persona: 'neha', noteId: 'HITL-plateau', needs: ['onboarded', 'stepDone', 'report'], caption: 'Day 30: 21/30 days, a retest date, and a dietitian at the plateau. Next: all changes.' },
 ];

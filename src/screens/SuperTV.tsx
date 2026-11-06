@@ -38,6 +38,8 @@ export function SuperTV() {
     setWatched(true);
     await wait(700); // video ended: close the player so "Kaam ka laga?" is visible
     setPlayer(false);
+    await wait(350);
+    document.querySelector('[data-note-anchor="tv-feedback"]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
   useAction('tv-watch', play);
   useAction('tv-all', () => setAll(true));

@@ -27,3 +27,6 @@ All questions were answered on 6 Nov 2026. Every default was kept except Q1.
 - The streak sheet counts "your first 7 days" instead of weekday letters, which didn't match the calendar.
 - Meal-log staples appear in the Me card only after a meal is logged.
 - The Tara coach card opens Rohit's own chat when the persona is Rohit. The Expert Chat avatar opens Profile.
+- Rohit's voice note never states his age or hours, so his chips no longer claim "38" or "9–7". He answers one age question, which is the only missing essential, and an under-18 answer opens the guardian sheet.
+- Picking "<18" in the tap-to-choose fallback now opens the guardian sheet.
+- After the SuperTV pick finishes, the page scrolls to "Kaam ka laga?" so the feedback card is visible.

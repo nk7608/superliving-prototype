@@ -28,10 +28,11 @@ const SRC = {
 export function memoryFor(state: DemoState): MemItem[] {
   if (state.persona === 'rohit') {
     return [
-      { id: 'r-name', section: 'basics', label: l('Naam', 'Name'), value: l('Rohit Sharma · 38'), source: SRC.rohitVoice },
+      { id: 'r-name', section: 'basics', label: l('Naam', 'Name'), value: l('Rohit Sharma'), source: SRC.rohitVoice },
+      { id: 'r-age', section: 'basics', label: l('Umar', 'Age'), value: l('30–44'), source: SRC.onb },
       { id: 'r-city', section: 'basics', label: l('Shehar', 'City'), value: l('Kanpur'), source: SRC.neha },
       { id: 'r-kitchen', section: 'kitchen', label: l('Ghar ka khana', 'Home kitchen'), value: l('6 log · veg, Ravivar non-veg', '6 people · veg, non-veg on Sundays'), source: SRC.neha },
-      { id: 'r-work', section: 'routine', label: l('Kaam', 'Work'), value: l('Bank, 9–7'), source: SRC.rohitVoice },
+      { id: 'r-work', section: 'routine', label: l('Kaam', 'Work'), value: l('Bank mein kaam', 'Works at a bank'), source: SRC.rohitVoice },
       { id: 'r-goals', section: 'goals', label: l('Goals'), value: l('Stress · Neend · Pet ki charbi', 'Stress · Sleep · Belly fat'), source: SRC.rohitVoice },
     ].filter((i) => !state.forgotten.includes(i.id)) as MemItem[];
   }

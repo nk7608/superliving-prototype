@@ -52,6 +52,8 @@ export function OnboardingFlow({ variant = 'neha', onDone }: { variant?: 'neha' 
   const [editing, setEditing] = useState<ChipDef | null>(null);
   const [confirmed, setConfirmed] = useState<string[]>([]);
   const [age, setAge] = useState(String(persona.age));
+  // Rohit's voice note doesn't say his age, so it is the one thing we ask (F0: only missing essentials).
+  const [rohitAge, setRohitAge] = useState<string | null>(null);
   const [guardian, setGuardian] = useState(false);
   const [fb, setFb] = useState<{ goals: string[]; age?: string; food?: string; lang?: string; more: boolean }>({ goals: [], more: false });
   const timers = useRef<number[]>([]);
@@ -61,7 +63,7 @@ export function OnboardingFlow({ variant = 'neha', onDone }: { variant?: 'neha' 
 
   const chips: ChipDef[] = isRohit
     ? [
-        { id: 'name', text: t('chipName', { name: 'Rohit', age }) },
+        { id: 'name', text: t('chipRohitName') },
         { id: 'work', text: t('chipRohitWork') },
         { id: 'goals', text: t('chipRohitGoals') },
         { id: 'sleep', text: t('chipRohitSleep') },
@@ -139,10 +141,11 @@ export function OnboardingFlow({ variant = 'neha', onDone }: { variant?: 'neha' 
   const ready = phase === 'chips' || phase === 'fallback';
   const allShown = phase === 'fallback' || shown >= chips.length;
   const fbReady = phase !== 'fallback' || (fb.goals.length > 0 && fb.age && fb.food && fb.lang);
-  const canGo = ready && allShown && (isRohit || (chai && who)) && fbReady;
+  const canGo = ready && allShown && (isRohit ? !!rohitAge : chai && who) && fbReady;
 
   const finish = () => {
-    if (Number(age) < 18) {
+    const minor = isRohit ? rohitAge === '<18' : Number(age) < 18 || (phase === 'fallback' && fb.age === '<18');
+    if (minor) {
       setGuardian(true);
       return;
     }
@@ -237,7 +240,7 @@ export function OnboardingFlow({ variant = 'neha', onDone }: { variant?: 'neha' 
                         onClick={() => setEditing(c)}
                         className={`flex min-h-[36px] items-center gap-1.5 rounded-full px-3 py-1.5 text-left text-[14px] font-medium ${guess ? 'border-[1.5px] border-dashed border-white/60 bg-transparent' : 'border border-white/15 bg-white/[0.12]'}`}
                       >
-                        {c.id === 'name' ? (isRohit ? t('chipName', { name: 'Rohit', age }) : t('chipName', { name: 'Neha', age })) : c.text}
+                        {c.id === 'name' && !isRohit ? t('chipName', { name: 'Neha', age }) : c.text}
                         {guess && <span className="rounded-full bg-white/15 px-1.5 text-[11px] text-white/80">{t('onbGuess')}</span>}
                         {c.inferred && !guess && <Check size={14} className="text-green-cta-light" />}
                       </motion.button>
@@ -260,6 +263,19 @@ export function OnboardingFlow({ variant = 'neha', onDone }: { variant?: 'neha' 
 
         {ready && allShown && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+            {isRohit && (
+              <div className="mt-5">
+                <h2 className="text-[17px] font-semibold">{t('onbOneMore')}</h2>
+                <div className="mt-2.5 text-[15px] text-white/90">{t('onbAgeQ')}</div>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {['<18', '18–29', '30–44', '45–59', '60+'].map((a) => (
+                    <button key={a} type="button" onClick={() => setRohitAge(a)} aria-pressed={rohitAge === a} className={`h-11 min-w-[60px] rounded-[14px] border px-3 text-[14px] font-medium ${rohitAge === a ? 'border-green-cta-light bg-green-cta-light text-[#163015]' : 'border-white/25 bg-green-tile'}`}>
+                      {a}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             {!isRohit && (
               <div className="mt-5">
                 <h2 className="text-[17px] font-semibold">{t('onbTwoMore')}</h2>
@@ -341,7 +357,7 @@ export function OnboardingFlow({ variant = 'neha', onDone }: { variant?: 'neha' 
           <div className="px-5 pb-2 text-text-primary">
             <h3 className="text-[19px] font-semibold">{t('editChip')}</h3>
             {editing.inferred && <p className="mt-1 text-[14px] text-text-secondary">{t('onbGuess')}: {editing.note}</p>}
-            {editing.id === 'name' ? (
+            {editing.id === 'name' && !isRohit ? (
               <label className="mt-3 block text-[14px] font-medium">
                 {t('fbAge')}
                 <input inputMode="numeric" value={age} onChange={(e) => setAge(e.target.value.replace(/\D/g, '').slice(0, 2))} className="mt-1 h-12 w-full rounded-[14px] border border-[#D5D0C0] px-3 text-[16px]" />
@@ -355,7 +371,7 @@ export function OnboardingFlow({ variant = 'neha', onDone }: { variant?: 'neha' 
               onClick={() => {
                 if (editing.inferred) setConfirmed((c) => [...c, editing.id]);
                 setEditing(null);
-                if (editing.id === 'name' && Number(age) < 18) setGuardian(true);
+                if (editing.id === 'name' && !isRohit && Number(age) < 18) setGuardian(true);
               }}
             >
               {editing.inferred ? t('confirmChip') : t('save')}
@@ -370,7 +386,7 @@ export function OnboardingFlow({ variant = 'neha', onDone }: { variant?: 'neha' 
           <h3 className="mt-1 text-[20px] font-semibold">{t('guardianTitle')}</h3>
           <p className="mt-1.5 text-[15px] leading-snug text-text-secondary">{t('guardianBody')}</p>
           <PrimaryButton full className="mt-4" onClick={() => setGuardian(false)}>{t('guardianCta')}</PrimaryButton>
-          <button type="button" onClick={() => { setGuardian(false); setEditing(chips[0]); }} className="mt-2 h-11 w-full text-[15px] font-medium text-green-700">{t('guardianBack')}</button>
+          <button type="button" onClick={() => { setGuardian(false); if (isRohit) setRohitAge(null); else setEditing(chips[0]); }} className="mt-2 h-11 w-full text-[15px] font-medium text-green-700">{t('guardianBack')}</button>
         </div>
       </Sheet>
       {state.lang && null}
